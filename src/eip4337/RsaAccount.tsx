@@ -48,7 +48,7 @@ export function RsaAccount({signer}: { signer: ethers.Signer }) {
                 <Popover
                     overlayStyle={{maxWidth: '300px'}}
                     content={'Generate a random RSA keypair. The private key will be used to sign the `UserOpHash`.'}>
-                    <Button type={keyPair.publicKey ? 'primary' : 'default'} onClick={generate}>Generate</Button>
+                    <Button type={keyPair.publicKey ? 'default' : 'primary'} onClick={generate}>Generate</Button>
                 </Popover>
             </Space>
             {keyPair.publicKey && <CreateAA
