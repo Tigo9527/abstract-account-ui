@@ -5,12 +5,15 @@ import {UserOp} from "./UserOp.tsx";
 import Link from "antd/es/typography/Link";
 import {Balance} from "../component/Balance.tsx";
 import {EIP4337} from "./conf.ts";
+import {BigNumber} from "ethers/lib.esm";
+import {parseEther} from "ethers/lib/utils";
 
 export function Account() {
     const localPk = localStorage.getItem('pk') || ''
     const [pk, setPK] = useState(localPk)
     const [signer, setSigner] = useState(null as ethers.Signer | null)
     const [addr, setAddr] = useState('')
+    const [aaAddrB, setAddrB] = useState(BigNumber.from(0))
     const generate = ()=>{
         const rndWallet = ethers.Wallet.createRandom()
         const rndPk = rndWallet.privateKey
@@ -47,12 +50,19 @@ export function Account() {
             </Space>
             <Space>
                 <div>Address: {addr}</div>
-                <Balance addr={addr}/>
+                <Balance setFn={setAddrB} addr={addr}/>
                 <Link href={'https://efaucet.confluxnetwork.org/'} target={'_blank'}>Faucet</Link>
             </Space>
-            <Space direction={'vertical'} style={{width: '100%'}}>
-                {signer && <UserOp signer={signer!}/>}
-            </Space>
+            {aaAddrB.gt(parseEther("20")) &&
+                <Space direction={'vertical'} style={{width: '100%'}}>
+                    {signer && <UserOp signer={signer!}/>}
+                </Space>
+            }
+            {aaAddrB.lt(parseEther("20")) &&
+                <Space direction={'vertical'} style={{width: '100%'}}>
+                    Get some ETH to continue. 👆︎
+                </Space>
+            }
         </Space>
     )
 }
