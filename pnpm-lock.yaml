@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@ant-design/icons': ^5.2.6
   '@types/react': ^18.2.15
   '@types/react-dom': ^18.2.7
   '@typescript-eslint/eslint-plugin': ^6.0.0
@@ -11,7 +12,6 @@ specifiers:
   eslint-plugin-react-hooks: ^4.6.0
   eslint-plugin-react-refresh: ^0.4.3
   ethers: ^5.7.2
-  jsencrypt: ^3.3.2
   react: ^18.2.0
   react-dom: ^18.2.0
   typescript: ^5.0.2
@@ -19,9 +19,9 @@ specifiers:
   vite: ^4.4.5
 
 dependencies:
+  '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
   antd: 5.9.2_biqbaboplfbrettd7655fr4n2y
   ethers: 5.7.2
-  jsencrypt: 3.3.2
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   userop: 0.3.3
@@ -1747,10 +1747,6 @@ packages:
     dependencies:
       argparse: 2.0.1
     dev: true
-
-  /jsencrypt/3.3.2:
-    resolution: {integrity: sha512-arQR1R1ESGdAxY7ZheWr12wCaF2yF47v5qpB76TtV64H1pyGudk9Hvw8Y9tb/FiTIaaTRUyaSnm5T/Y53Ghm/A==}
-    dev: false
 
   /json-buffer/3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}

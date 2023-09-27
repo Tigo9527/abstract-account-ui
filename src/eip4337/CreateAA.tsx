@@ -1,4 +1,4 @@
-import {Button, Input, notification, Popover, Space, Spin} from "antd";
+import {Button, Divider, Input, notification, Popover, Space, Spin} from "antd";
 import {BigNumber, BytesLike, ethers} from "ethers";
 import {useCallback, useEffect, useState} from "react";
 import {Client, IUserOperationMiddlewareCtx, Presets} from "userop";
@@ -6,9 +6,11 @@ import {EIP4337} from "./conf.ts";
 import {formatEther, parseEther} from "ethers/lib/utils";
 import {Addr} from "../component/Addr.tsx";
 import {buildDemoOperation} from "../logic/bizLogic.ts";
-
-export function CreateAA({signer, accountFactory, initFn, signFn}: { signer: ethers.Signer,
+import {MultiOp} from "./operations/MultiOp.tsx";
+export type OpsData = {destArr?: string[], fnArr?:string[]}
+export function CreateAA({signer, accountFactory, initFn, signFn, client}: { signer: ethers.Signer,
     accountFactory?: string,
+    client: Client
     signFn?: (ctx: IUserOperationMiddlewareCtx)=>Promise<void>,
     initFn?: (salt:string)=>Promise<{addr:string, initCode: BytesLike}> }) {
     const [api, contextHolder] = notification.useNotification();
@@ -18,6 +20,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn}: { signer: eth
     const [sa, setSA] = useState(null as Presets.Builder.SimpleAccount|null)
     const [txHash, setTxHash] = useState('')
     const [isSpin, setSpin] = useState(false)
+    const [opsData, setOpsData] = useState<OpsData>({destArr: [], fnArr:[]})
 
     const [counter, setCounter] = useState(0)
 
@@ -26,14 +29,13 @@ export function CreateAA({signer, accountFactory, initFn, signFn}: { signer: eth
         if (!sa) {
             return
         }
+        console.log(`multiple op`, opsData);
+        if (opsData) {
+            // return;
+        }
         setSpin(true);
         (async () => {
-            const client = await Client.init(nodeRpc, {
-                entryPoint: EIP4337.entryPoint['71'],
-                overrideBundlerRpc: EIP4337.bundlerRpc,
-            });
-
-            const stub = await client.sendUserOperation(buildDemoOperation(sa),
+            const stub = await client.sendUserOperation(buildDemoOperation(sa, opsData),
                 {
                     onBuild: (res)=>{
                         console.log(`built op`, res)
@@ -51,7 +53,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn}: { signer: eth
             api.error({type:'error', message: `Failed to send user operation: ${e}`})
             console.log('sendUserOperation', e)
         }).finally(()=>setSpin(false));
-    }, [sa, salt, initFn])
+    }, [sa, salt, initFn, opsData])
 
     const sendFunds = useCallback(()=>{
         if (!aaAddr) {
@@ -156,10 +158,12 @@ export function CreateAA({signer, accountFactory, initFn, signFn}: { signer: eth
                         <Button onClick={sendFunds} type={aaAddrB.lte(parseEther("0.1")) ? 'primary' : 'dashed'}>Fund</Button>
                     </Popover>
                 </Space>
+                <Divider orientationMargin={0} orientation={'left'}>Operation(s)</Divider>
+                <MultiOp opReceiver={setOpsData}/>
                 <Space>
                     <Popover content={aaAddrB.lt(parseEther("0.1")) ? 'Fund it first' : ''}>
                     {(!isSpin) && <Button
-                        disabled={aaAddrB.lt(parseEther("0.1"))}
+                        disabled={aaAddrB.lt(parseEther("0.1")) || !(opsData.fnArr?.length ?? 0)}
                         onClick={sendOperation} type={'primary'}>Send Operation</Button>}
                     {isSpin && <Spin/>}
                     </Popover>
@@ -167,7 +171,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn}: { signer: eth
                 {txHash && <div>Transaction:</div>}
                 <a href={`https://evmtestnet.confluxscan.io/tx/${txHash}`} target={'_blank'}>{txHash}</a>
             </Space>
-            <div style={{width:'500px', display:'none',
+            <div style={{width:'500px', display:'none', // -------- debug , hidden -----
                 overflowWrap: 'anywhere'
             }}>
                 {sa?.getInitCode()?.toString() || '?'}

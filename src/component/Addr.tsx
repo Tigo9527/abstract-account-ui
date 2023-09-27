@@ -2,6 +2,7 @@ import {EIP4337} from "../eip4337/conf.ts";
 import Link from "antd/es/typography/Link";
 import {useEffect, useState} from "react";
 import {Badge, Space} from "antd";
+import {CopyOutlined} from "@ant-design/icons";
 
 export function Addr({addr, checkCode=false, counter=0}:{addr:string, checkCode?:boolean, counter?: number}) {
     const [hasCode, setHasCode] = useState(false)
@@ -16,6 +17,7 @@ export function Addr({addr, checkCode=false, counter=0}:{addr:string, checkCode?
     return (
         <Space>
             <Link target={'_blank'} href={`${EIP4337.scanUrl}/address/${addr}`}>{addr}</Link>
+            <CopyOutlined onClick={()=>navigator.clipboard.writeText(addr)}/>
             {checkCode && <Badge color={hasCode ? 'green': 'red'} text={hasCode ? 'Deployed': 'Not Deployed'} />}
         </Space>
     )

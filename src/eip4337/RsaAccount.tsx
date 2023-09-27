@@ -3,9 +3,9 @@ import {Button, Popover, Space} from "antd";
 import {base64ToBytes, Base64urlUInt, buf2hex, genRsa, initRsaAccountSdk, loadKeyPair} from "../logic/bizLogic.ts";
 import {useCallback, useEffect, useState} from "react";
 import {CreateAA} from "./CreateAA.tsx";
-import {IUserOperationMiddlewareCtx} from "userop";
+import {Client, IUserOperationMiddlewareCtx} from "userop";
 
-export function RsaAccount({signer}: { signer: ethers.Signer }) {
+export function RsaAccount({signer, client}: { signer: ethers.Signer, client: Client }) {
     const [keyPair, setKeyPair] =
         useState({} as {privateKey?: CryptoKey, publicKey?: {n: string}});
     const generate = ()=>{
@@ -52,6 +52,7 @@ export function RsaAccount({signer}: { signer: ethers.Signer }) {
                 </Popover>
             </Space>
             {keyPair.publicKey && <CreateAA
+                client={client}
                 initFn={buildInitCodeFn}
                 signFn={signFn}
                 signer={signer}/>}

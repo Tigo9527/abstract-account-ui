@@ -4,6 +4,7 @@ import {parseEther} from "ethers/lib/utils";
 import {BytesLike, ethers} from "ethers";
 import {EntryPoint__factory} from "userop/dist/typechain";
 import {Presets} from "userop";
+import {OpsData} from "../eip4337/CreateAA.tsx";
 
 export async function initRsaAccountSdk(
     _exponent: BytesLike, _modulus: BytesLike,
@@ -38,11 +39,11 @@ export async function initRsaAccountSdk(
     return {addr, initCode}
 }
 
-export function buildDemoOperation(sa: Presets.Builder.SimpleAccount) {
+export function buildDemoOperation(sa: Presets.Builder.SimpleAccount, opsInput?:OpsData) {
     console.log(`sender is `, sa.getSender())
-    const destArr = [EIP4337.demoErc20 , EIP4337.demoErc20, EIP4337.demoErc20
+    const destArr = opsInput?.destArr || [EIP4337.demoErc20 , EIP4337.demoErc20, EIP4337.demoErc20
     ];
-    const funDataArr = [
+    const funDataArr = opsInput?.fnArr || [
         encodeMint(sa.getSender(), parseEther('1')),
         encodeApprove(EIP4337.entryPoint["71"], parseEther('1')),
         encodeTransfer('0x'+'1'.padStart(40, '0'), parseEther('0.3'))

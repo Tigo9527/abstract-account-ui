@@ -7,6 +7,7 @@ import {Balance} from "../component/Balance.tsx";
 import {EIP4337} from "./conf.ts";
 import {BigNumber} from "ethers/lib.esm";
 import {parseEther} from "ethers/lib/utils";
+import {CopyOutlined} from "@ant-design/icons";
 
 export function Account() {
     const localPk = localStorage.getItem('pk') || ''
@@ -49,7 +50,7 @@ export function Account() {
                 </Popover>
             </Space>
             <Space>
-                <div>Address: {addr}</div>
+                <div>Address: {addr} <CopyOutlined onClick={()=>navigator.clipboard.writeText(addr)}/></div>
                 <Balance setFn={setAddrB} addr={addr}/>
                 <Link href={'https://efaucet.confluxnetwork.org/'} target={'_blank'}>Faucet</Link>
             </Space>
