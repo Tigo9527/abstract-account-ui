@@ -7,7 +7,7 @@ import {Balance} from "../component/Balance.tsx";
 import {EIP4337} from "./conf.ts";
 import {BigNumber} from "ethers/lib.esm";
 import {parseEther} from "ethers/lib/utils";
-import {CopyOutlined} from "@ant-design/icons";
+import {Addr} from "../component/Addr.tsx";
 
 export function Account() {
     const localPk = localStorage.getItem('pk') || ''
@@ -49,8 +49,9 @@ export function Account() {
                     <Button type={(pk) ? 'dashed':'primary'} onClick={generate}>Generate</Button>
                 </Popover>
             </Space>
-            <Space>
-                <div>Address: {addr} <CopyOutlined onClick={()=>navigator.clipboard.writeText(addr)}/></div>
+            {!addr && 'Generate a private key to continue. 👆︎'}
+            <Space style={{display: addr ? '':'none'}}>
+                <div>Address: <Addr addr={addr}/></div>
                 <Balance setFn={setAddrB} addr={addr}/>
                 <Link href={'https://efaucet.confluxnetwork.org/'} target={'_blank'}>Faucet</Link>
             </Space>
@@ -59,9 +60,10 @@ export function Account() {
                     {signer && <UserOp signer={signer!}/>}
                 </Space>
             }
-            {aaAddrB.lt(parseEther("20")) &&
+            {addr && aaAddrB.lt(parseEther("20")) &&
                 <Space direction={'vertical'} style={{width: '100%'}}>
-                    Get some ETH to continue. 👆︎
+                    <div>Get some ETH to continue. <Link href={'https://efaucet.confluxnetwork.org/'}
+                                                         target={'_blank'}>Faucet</Link></div>
                 </Space>
             }
         </Space>
