@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {EIP4337} from "../eip4337/conf.ts";
 import {BigNumber} from "ethers/lib.esm";
 import {formatEther} from "ethers/lib/utils";
@@ -12,7 +12,10 @@ export function Balance({addr, counter = 0, setFn}: {
     const [aaAddrB, setAddrB] = useState(BigNumber.from(0))
     const [isSpin, setSpin] = useState(true)
     const up = useCallback(() => {
-        setSpin(true)
+        if (!addr) {
+            return
+        }
+        setSpin(true);
         EIP4337.provider.getBalance(addr).then(res => {
             setAddrB(res);
             setFn && setFn(res)

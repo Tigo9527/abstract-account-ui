@@ -8,6 +8,7 @@ import {EIP4337} from "./conf.ts";
 import {BigNumber} from "ethers/lib.esm";
 import {parseEther} from "ethers/lib/utils";
 import {Addr} from "../component/Addr.tsx";
+import {AppConfig} from "./AppConfig.tsx";
 
 export function Account() {
     const localPk = localStorage.getItem('pk') || ''
@@ -37,8 +38,11 @@ export function Account() {
 
     return (
         <Space direction={'vertical'} style={{border: '0px solid red'}}>
-            <>Abstract Account Demo</>
-            <Space>
+            <div style={{}}>
+                <div style={{border: '0px solid red'}}>Abstract Account Demo</div>
+                <AppConfig signer={signer!}/>
+            </div>
+            <Space style={{clear: "both"}}>
                 <Input style={{width:'600px'}} placeholder={'Private Key'}
                        onChange={(e)=>setPK(e.target.value)} value={pk}/>
                 <Popover
