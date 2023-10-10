@@ -35,7 +35,7 @@ export function MultiOp({opReceiver}: {
                     return abiInterface.encodeFunctionData(input.action.toLowerCase(), [input.address, parseEther(input.amount.toString())])
                 })
             }
-            console.log(`report data`, data)
+            // console.log(`report data`, data)
             opReceiver(data)
         } catch (e) {
             opReceiver({})
@@ -44,9 +44,9 @@ export function MultiOp({opReceiver}: {
     }, [ids, map]);
 
     const fn = useCallback((_:OpInput, allValues:OpInput)=>{
-        console.log(`allValues`, allValues)
+        // console.log(`allValues`, allValues)
         map.set(allValues.id, allValues)
-        console.log(`map size: `, map.size)
+        // console.log(`map size: `, map.size)
         setMap(new Map(map))
     }, [map])
     return (

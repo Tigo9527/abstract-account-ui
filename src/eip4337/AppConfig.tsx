@@ -1,4 +1,4 @@
-import {App, Button, Modal, Space, Spin} from "antd";
+import {Button, Modal, Space, Spin} from "antd";
 import {useCallback, useEffect, useState} from "react";
 import {Contract, ContractFactory, Signer, utils} from "ethers";
 import {paymaster_abi, paymaster_bytecode} from "./paymasterABI.ts";
@@ -6,9 +6,9 @@ import {EIP4337} from "./conf.ts";
 import {Addr} from "../component/Addr.tsx";
 import {formatEther, parseEther} from "ethers/lib/utils";
 import {BigNumber, constants} from "ethers/lib.esm";
+import {ReloadOutlined} from "@ant-design/icons";
 
 export function AppConfig({signer}: { signer: Signer }) {
-    const {message, /*modal, notification*/} = App.useApp();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -92,7 +92,6 @@ export function AppConfig({signer}: { signer: Signer }) {
             setDeployPaymasterTx(tx.deployTransaction.hash)
             return tx.deployTransaction.wait()
         }).then(rcpt => {
-            message.success('Paymaster deployed').then()
             setPaymasterAddr(rcpt.contractAddress)
         }).catch(e => {
             console.log(`failed to deploy`, e)
@@ -111,9 +110,10 @@ export function AppConfig({signer}: { signer: Signer }) {
                 <section>
                     <div>Paymaster: {(paymasterAddr ? <Addr addr={paymasterAddr}/> : '') || 'Not Set'}</div>
                     {paymasterAddr &&
-                        <Space>
+                        <Space style={{marginRight: '8px'}}>
                             Balance: {formatEther(depositV)}
-                            <Button onClick={deposit}>Deposit</Button>
+                            <Button size={'small'} type={'text'} onClick={getDeposit}><ReloadOutlined/></Button>
+                            {!deploying && <Button onClick={deposit}>Deposit</Button>}
                         </Space>
                     }
                     {deploying && <Spin/>}
