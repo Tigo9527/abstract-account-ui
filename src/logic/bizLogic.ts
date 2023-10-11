@@ -53,7 +53,7 @@ export function buildDemoOperation(sa: Presets.Builder.SimpleAccount, opsInput?:
             [],
             funDataArr
         ])).setPartial({
-        preVerificationGas: 1_000_000, verificationGasLimit: 3_000_000, callGasLimit: 1_000_000
+        preVerificationGas: 1_000_000, verificationGasLimit: 2_900_000, callGasLimit: 1_000_000
     })
 }
 

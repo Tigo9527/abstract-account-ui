@@ -1,4 +1,4 @@
-import {Button, Divider, Input, notification, Popover, Space, Spin} from "antd";
+import {Button, Input, notification, Popover, Space, Spin, Switch} from "antd";
 import {BigNumber, BytesLike, ethers} from "ethers";
 import {useCallback, useEffect, useState} from "react";
 import {Client, IUserOperationMiddlewareCtx, Presets} from "userop";
@@ -7,6 +7,8 @@ import {formatEther, parseEther} from "ethers/lib/utils";
 import {Addr} from "../component/Addr.tsx";
 import {buildDemoOperation} from "../logic/bizLogic.ts";
 import {MultiOp} from "./operations/MultiOp.tsx";
+import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import {rebuildAccountMiddlewares} from "./utils.ts";
 export type OpsData = {destArr?: string[], fnArr?:string[]}
 export function CreateAA({signer, accountFactory, initFn, signFn, client}: { signer: ethers.Signer,
     accountFactory?: string,
@@ -20,6 +22,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
     const [sa, setSA] = useState(null as Presets.Builder.SimpleAccount|null)
     const [txHash, setTxHash] = useState('')
     const [isSpin, setSpin] = useState(false)
+    const [usePaymaster, setUsePaymaster] = useState(false)
     const [opsData, setOpsData] = useState<OpsData>({destArr: [], fnArr:[]})
 
     const [counter, setCounter] = useState(0)
@@ -29,18 +32,22 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
         if (!sa) {
             return
         }
-        console.log(`multiple op`, opsData);
+        // console.log(`multiple op`, opsData);
         if (opsData) {
             // return;
         }
         setSpin(true);
         (async () => {
+            const ok = await rebuildAccountMiddlewares(sa, signer, usePaymaster, signFn);
+            if (!ok) {
+                return
+            }
             const stub = await client.sendUserOperation(buildDemoOperation(sa, opsData),
                 {
-                    onBuild: (res)=>{
-                        console.log(`built op`, res)
-                    }
-                })
+                    // onBuild: (res)=>{
+                    //     console.log(`built op`, res)
+                    // }
+                });
             api.info({type:'info', message: `Succeeded to send user operation`})
             setSpin(true)
             const rcpt = await stub.wait().finally(()=>setSpin(false))
@@ -53,7 +60,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
             api.error({type:'error', message: `Failed to send user operation: ${e}`})
             console.log('sendUserOperation', e)
         }).finally(()=>setSpin(false));
-    }, [sa, salt, initFn, opsData])
+    }, [sa, salt, initFn, opsData, usePaymaster, signer])
 
     const sendFunds = useCallback(()=>{
         if (!aaAddr) {
@@ -109,20 +116,16 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
             if (initFn) {
                 const {addr, initCode} = await initFn(salt)
                 if (!addr) {
-                    return
+                    return Promise.resolve(false)
                 }
                 // console.log(`previous init code`, simpleAccount.getInitCode().toString().substring(0, 100))
                 // console.log(`use init fn result`, addr, initCode);
                 simpleAccount['initCode'] = initCode
                 // simpleAccount.setInitCode(initCode)
                 simpleAccount.setSender(addr)
+                simpleAccount.useDefaults({sender: addr})
+                //console.log(`set sender to `, addr)
                 simpleAccount.proxy = simpleAccount.proxy.attach(addr);
-                //
-                const [resolveAccount, getGasPrice, /*_estimateUserOperationGas*/, /*EOASignature*/] = simpleAccount['middlewareStack']
-                simpleAccount.resetMiddleware()
-                simpleAccount.useMiddleware(resolveAccount)
-                simpleAccount.useMiddleware(getGasPrice)
-                simpleAccount.useMiddleware(signFn!)
             }
             if (!isSubscribed) return
             setSA(simpleAccount);
@@ -155,15 +158,28 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                 <Space>
                     <>Balance: {formatEther(aaAddrB)}</>
                     <Popover content={'Send funds(gas) to this account'}>
-                        <Button onClick={sendFunds} type={aaAddrB.lte(parseEther("0.1")) ? 'primary' : 'dashed'}>Fund</Button>
+                        <Button onClick={sendFunds} type={aaAddrB.lte(parseEther("0.1")) && !usePaymaster ? 'primary' : 'dashed'}>Fund</Button>
                     </Popover>
+                    OR, use verifying paymaster:
+                    <Switch checked={usePaymaster}
+                               checkedChildren={<CheckOutlined />}
+                               unCheckedChildren={<CloseOutlined />}
+                             onChange={async (checked, ) => {
+                                 const str = localStorage.getItem(`paymaster_addr#${await signer.getAddress()}`);
+                                 if (!str) {
+                                     api.error({type: 'error', message: `Paymaster not set, set it at [settings] panel.`})
+                                     return
+                                 }
+                                 setUsePaymaster(checked);
+                             }
+                             }/>
                 </Space>
-                <Divider orientationMargin={0} orientation={'left'}>Operation(s)</Divider>
-                <MultiOp opReceiver={setOpsData}/>
+                <div style={{fontWeight: 'bold'}}>Operation(s):</div>
+                {aaAddr && <MultiOp opReceiver={setOpsData} defaultAddr={aaAddr}/>}
                 <Space>
-                    <Popover content={aaAddrB.lt(parseEther("0.1")) ? 'Fund it first' : ''}>
+                    <Popover content={(aaAddrB.lt(parseEther("0.1")) && !usePaymaster) ? 'Fund it first' : ''}>
                     {(!isSpin) && <Button
-                        disabled={aaAddrB.lt(parseEther("0.1")) || !(opsData.fnArr?.length ?? 0)}
+                        disabled={(aaAddrB.lt(parseEther("0.1")) && !usePaymaster) || !(opsData.fnArr?.length ?? 0)}
                         onClick={sendOperation} type={'primary'}>Send Operation</Button>}
                     {isSpin && <Spin/>}
                     </Popover>
