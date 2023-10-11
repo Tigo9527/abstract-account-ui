@@ -59,7 +59,7 @@ export async function rebuildAccountMiddlewares(simpleAccount: SimpleAccount,
     simpleAccount.useMiddleware(getGasPrice)
 
     if (usePaymaster) {
-        const str = localStorage.getItem('paymaster_addr');
+        const str = localStorage.getItem(`paymaster_addr#${await signer.getAddress()}`);
         if (!str) {
             throw new Error(`paymaster not set`)
         }

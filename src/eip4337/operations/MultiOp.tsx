@@ -6,6 +6,7 @@ import {EIP4337} from "../conf.ts";
 import {abiInterface} from "../abi.ts";
 import {parseEther} from "ethers/lib/utils";
 import {OpsData} from "../CreateAA.tsx";
+import {Addr} from "../../component/Addr.tsx";
 
 type OpInput = {
     id: string, action: string, address: string, amount:string
@@ -52,6 +53,7 @@ export function MultiOp({opReceiver, defaultAddr}: {
     }, [map])
     return (
         <Space direction={'vertical'}>
+            <div>Target ERC20 contract: <Addr addr={EIP4337.demoErc20}/></div>
             {ids.map((i, )=>{
                 return <OP key={i} btn={
                     <Button type={'text'} disabled={ids.length===1} onClick={()=>remove(i)}><MinusOutlined/></Button>

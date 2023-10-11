@@ -1,4 +1,4 @@
-import {Button, Divider, Input, notification, Popover, Space, Spin, Switch} from "antd";
+import {Button, Input, notification, Popover, Space, Spin, Switch} from "antd";
 import {BigNumber, BytesLike, ethers} from "ethers";
 import {useCallback, useEffect, useState} from "react";
 import {Client, IUserOperationMiddlewareCtx, Presets} from "userop";
@@ -160,14 +160,12 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                     <Popover content={'Send funds(gas) to this account'}>
                         <Button onClick={sendFunds} type={aaAddrB.lte(parseEther("0.1")) && !usePaymaster ? 'primary' : 'dashed'}>Fund</Button>
                     </Popover>
-                </Space>
-                <Space>
-                    Use verifying paymaster:
+                    OR, use verifying paymaster:
                     <Switch checked={usePaymaster}
                                checkedChildren={<CheckOutlined />}
                                unCheckedChildren={<CloseOutlined />}
-                             onChange={(checked, ) => {
-                                 const str = localStorage.getItem('paymaster_addr');
+                             onChange={async (checked, ) => {
+                                 const str = localStorage.getItem(`paymaster_addr#${await signer.getAddress()}`);
                                  if (!str) {
                                      api.error({type: 'error', message: `Paymaster not set, set it at [settings] panel.`})
                                      return
@@ -176,7 +174,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                              }
                              }/>
                 </Space>
-                <Divider orientationMargin={0} orientation={'left'}>Operation(s)</Divider>
+                <div style={{fontWeight: 'bold'}}>Operation(s):</div>
                 {aaAddr && <MultiOp opReceiver={setOpsData} defaultAddr={aaAddr}/>}
                 <Space>
                     <Popover content={(aaAddrB.lt(parseEther("0.1")) && !usePaymaster) ? 'Fund it first' : ''}>

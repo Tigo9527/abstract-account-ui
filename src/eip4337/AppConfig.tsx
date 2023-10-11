@@ -1,4 +1,4 @@
-import {Button, Modal, Space, Spin} from "antd";
+import {Button, Divider, Modal, Space, Spin} from "antd";
 import {useCallback, useEffect, useState} from "react";
 import {Contract, ContractFactory, Signer, utils} from "ethers";
 import {paymaster_abi, paymaster_bytecode} from "./paymasterABI.ts";
@@ -105,12 +105,12 @@ export function AppConfig({signer, signerAddr}: { signer: Signer, signerAddr: st
                 <Button type={'link'} onClick={showModal}>Settings</Button>
             </div>
 
-            <Modal title="Paymaster" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Settings" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <section>
                     <div>Paymaster: {(paymasterAddr ? <Addr addr={paymasterAddr}/> : '') || 'Not Set'}</div>
                     {paymasterAddr &&
                         <Space style={{marginRight: '8px'}}>
-                            Balance: {formatEther(depositV)}
+                            Balance on EntryPoint: {formatEther(depositV)}
                             <Button size={'small'} type={'text'} onClick={getDeposit}><ReloadOutlined/></Button>
                             {!deploying && <Button onClick={deposit}>Deposit</Button>}
                         </Space>
@@ -121,6 +121,10 @@ export function AppConfig({signer, signerAddr}: { signer: Signer, signerAddr: st
                                                target={'_blank'}>{deployPaymasterTx}</a></div>}
                     {!paymasterAddr && !deploying &&
                         <div><Button onClick={deployPaymaster} type={'primary'}>Deploy</Button></div>}
+                </section>
+                <Divider/>
+                <section>
+                    <div>Entry Point: <Addr addr={EIP4337.entryPoint["71"]}/></div>
                 </section>
             </Modal>
         </div>
