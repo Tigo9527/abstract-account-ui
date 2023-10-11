@@ -123,6 +123,8 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                 simpleAccount['initCode'] = initCode
                 // simpleAccount.setInitCode(initCode)
                 simpleAccount.setSender(addr)
+                simpleAccount.useDefaults({sender: addr})
+                //console.log(`set sender to `, addr)
                 simpleAccount.proxy = simpleAccount.proxy.attach(addr);
             }
             if (!isSubscribed) return

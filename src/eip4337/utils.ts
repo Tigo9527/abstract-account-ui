@@ -64,6 +64,9 @@ export async function rebuildAccountMiddlewares(simpleAccount: SimpleAccount,
             throw new Error(`paymaster not set`)
         }
         simpleAccount.useMiddleware(signByPaymaster(signer, str));
+    } else {
+        // clear it. User may switch usingPaymaster flag, previous data may be cached (in failure case)
+        simpleAccount.setPaymasterAndData('0x')
     }
     simpleAccount.useMiddleware(signFn || EOASignature(signer))
 
