@@ -8,7 +8,7 @@ import {formatEther, parseEther} from "ethers/lib/utils";
 import {BigNumber, constants} from "ethers/lib.esm";
 import {ReloadOutlined} from "@ant-design/icons";
 
-export function AppConfig({signer}: { signer: Signer }) {
+export function AppConfig({signer, signerAddr}: { signer: Signer, signerAddr: string }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -49,39 +49,38 @@ export function AppConfig({signer}: { signer: Signer }) {
     }, [paymasterAddr, signer])
 
     useEffect(() => {
-        if (!paymasterAddr) {
+        if (!paymasterAddr || !signerAddr) {
             return
         }
-        localStorage.setItem('paymaster_addr', paymasterAddr || '');
+        localStorage.setItem(`paymaster_addr#${signerAddr}`, paymasterAddr || '');
         getDeposit()
-    }, [paymasterAddr])
+    }, [paymasterAddr, signerAddr])
 
     useEffect(() => {
         if (!signer) {
             return
         }
-        const str = localStorage.getItem('paymaster_addr');
-        console.log(`paymaster_addr at local storage [${str}]`)
-        if (str) {
-            const paymaster = new Contract(str, paymaster_abi, signer)
-            Promise.all([
-                paymaster.verifyingSigner(),
-                signer.getAddress()
-            ]).then(([owner, cur]) => {
-                console.log(`check saved paymaster's owner: ${owner} vs current signer ${cur}`)
-                return cur === owner
-            }).then((eq: boolean) => {
-                if (!eq) {
-                    // force clear
-                    localStorage.setItem('paymaster_addr', '');
-                    setPaymasterAddr('')
-                }
-            }).catch((e: Error) => {
-                console.log(`check paymaster addr error:`, e)
-            })
-        }
+        const str = localStorage.getItem(`paymaster_addr#${signerAddr}`);
+        // console.log(`paymaster_addr at local storage [${str}]`)
+        // local storage key is combined with signer addr, validation is not needed anymore.
+        // if (str) {
+        //     const paymaster = new Contract(str, paymaster_abi, signer)
+        //     Promise.all([
+        //         paymaster.verifyingSigner(),
+        //         signer.getAddress()
+        //     ]).then(([owner, cur]) => {
+        //         console.log(`check saved paymaster's owner: ${owner} vs current signer ${cur}`)
+        //         return cur === owner
+        //     }).then((eq: boolean) => {
+        //         if (!eq) {
+        //             setPaymasterAddr('')
+        //         }
+        //     }).catch((e: Error) => {
+        //         console.log(`check paymaster addr error:`, e)
+        //     })
+        // }
         setPaymasterAddr(str || '')
-    }, [signer])
+    }, [signer, signerAddr])
 
     const deployPaymaster = useCallback(() => {
         setDeploying(true)

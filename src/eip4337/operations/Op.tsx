@@ -4,10 +4,10 @@ import {FC, ReactNode, useEffect} from "react";
 const opTypes = ['Mint', 'Approve', 'Transfer']
 
 export const OP: FC<{
-    btn?: ReactNode, id?:string
+    btn?: ReactNode, id?:string, defaultAddr?: string,
     onValuesChange?: (changedValues: any, allValues: any) => void
 }> = ({
-          btn, id,
+          btn, id, defaultAddr,
           onValuesChange
       }) => {
 
@@ -15,7 +15,7 @@ export const OP: FC<{
     useEffect(()=>{
         const initV = {
             action: opTypes[0],
-            address: '0x1' + '1'.padStart(39, '0'),
+            address: defaultAddr || '0x1' + '1'.padStart(39, '0'),
             amount: Date.now() % 100, id: id
         };
         form.setFieldsValue(initV)

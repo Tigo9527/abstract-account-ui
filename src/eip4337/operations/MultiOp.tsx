@@ -11,8 +11,9 @@ type OpInput = {
     id: string, action: string, address: string, amount:string
 }
 
-export function MultiOp({opReceiver}: {
-    opReceiver: Dispatch<SetStateAction<OpsData>>
+export function MultiOp({opReceiver, defaultAddr}: {
+    opReceiver: Dispatch<SetStateAction<OpsData>>,
+    defaultAddr?: string
 }) {
     const [ids, setIds] = useState<number[]>([1])
     const [map, setMap] = useState<Map<string, OpInput>>(new Map())
@@ -51,11 +52,12 @@ export function MultiOp({opReceiver}: {
     }, [map])
     return (
         <Space direction={'vertical'}>
-            {ids.map((i, idx)=>{
+            {ids.map((i, )=>{
                 return <OP key={i} btn={
-                    <Button type={'text'} disabled={idx===0} onClick={()=>remove(i)}><MinusOutlined/></Button>
+                    <Button type={'text'} disabled={ids.length===1} onClick={()=>remove(i)}><MinusOutlined/></Button>
                 }
                            onValuesChange={fn} id={i.toString()}
+                           defaultAddr={defaultAddr}
                 />
             })}
             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>

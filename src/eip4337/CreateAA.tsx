@@ -38,7 +38,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
         }
         setSpin(true);
         (async () => {
-            const ok = await rebuildAccountMiddlewares(sa, salt, signer, usePaymaster, initFn, signFn);
+            const ok = await rebuildAccountMiddlewares(sa, signer, usePaymaster, signFn);
             if (!ok) {
                 return
             }
@@ -113,6 +113,18 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                     salt: salt.startsWith('0x') ? BigNumber.from(BigInt(salt)) : BigNumber.from(salt),
                 },
             );
+            if (initFn) {
+                const {addr, initCode} = await initFn(salt)
+                if (!addr) {
+                    return Promise.resolve(false)
+                }
+                // console.log(`previous init code`, simpleAccount.getInitCode().toString().substring(0, 100))
+                // console.log(`use init fn result`, addr, initCode);
+                simpleAccount['initCode'] = initCode
+                // simpleAccount.setInitCode(initCode)
+                simpleAccount.setSender(addr)
+                simpleAccount.proxy = simpleAccount.proxy.attach(addr);
+            }
             if (!isSubscribed) return
             setSA(simpleAccount);
             setAddr(simpleAccount.proxy.address)
@@ -144,7 +156,7 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                 <Space>
                     <>Balance: {formatEther(aaAddrB)}</>
                     <Popover content={'Send funds(gas) to this account'}>
-                        <Button onClick={sendFunds} type={aaAddrB.lte(parseEther("0.1")) ? 'primary' : 'dashed'}>Fund</Button>
+                        <Button onClick={sendFunds} type={aaAddrB.lte(parseEther("0.1")) && !usePaymaster ? 'primary' : 'dashed'}>Fund</Button>
                     </Popover>
                 </Space>
                 <Space>
@@ -163,11 +175,11 @@ export function CreateAA({signer, accountFactory, initFn, signFn, client}: { sig
                              }/>
                 </Space>
                 <Divider orientationMargin={0} orientation={'left'}>Operation(s)</Divider>
-                <MultiOp opReceiver={setOpsData}/>
+                {aaAddr && <MultiOp opReceiver={setOpsData} defaultAddr={aaAddr}/>}
                 <Space>
-                    <Popover content={aaAddrB.lt(parseEther("0.1")) ? 'Fund it first' : ''}>
+                    <Popover content={(aaAddrB.lt(parseEther("0.1")) && !usePaymaster) ? 'Fund it first' : ''}>
                     {(!isSpin) && <Button
-                        disabled={aaAddrB.lt(parseEther("0.1")) || !(opsData.fnArr?.length ?? 0)}
+                        disabled={(aaAddrB.lt(parseEther("0.1")) && !usePaymaster) || !(opsData.fnArr?.length ?? 0)}
                         onClick={sendOperation} type={'primary'}>Send Operation</Button>}
                     {isSpin && <Spin/>}
                     </Popover>

@@ -1,6 +1,6 @@
 import {IUserOperationMiddlewareCtx} from "userop";
 import {SimpleAccount} from "userop/dist/preset/builder";
-import {BytesLike, Signer, utils} from "ethers";
+import {Signer, utils} from "ethers";
 import {EOASignature} from "userop/dist/preset/middleware";
 import {arrayify, defaultAbiCoder, hexConcat} from "ethers/lib/utils";
 
@@ -50,22 +50,8 @@ export function signByPaymaster(signer: Signer, paymasterAddr: string) {
 }
 
 export async function rebuildAccountMiddlewares(simpleAccount: SimpleAccount,
-                                                salt: string,
                                                 signer: Signer, usePaymaster: boolean,
-                                                initFn?: (salt:string)=>Promise<{addr:string, initCode: BytesLike}>,
                                                 signFn?: (ctx: IUserOperationMiddlewareCtx)=>Promise<void>,): Promise<boolean> {
-    if (initFn) {
-        const {addr, initCode} = await initFn(salt)
-        if (!addr) {
-            return Promise.resolve(false)
-        }
-        // console.log(`previous init code`, simpleAccount.getInitCode().toString().substring(0, 100))
-        // console.log(`use init fn result`, addr, initCode);
-        simpleAccount['initCode'] = initCode
-        // simpleAccount.setInitCode(initCode)
-        simpleAccount.setSender(addr)
-        simpleAccount.proxy = simpleAccount.proxy.attach(addr);
-    }
         //
     const [resolveAccount, getGasPrice, /*_estimateUserOperationGas*/, /*EOASignature*/] = simpleAccount['middlewareStack']
     simpleAccount.resetMiddleware()

@@ -40,7 +40,7 @@ export function Account() {
         <Space direction={'vertical'} style={{border: '0px solid red'}}>
             <div style={{}}>
                 <div style={{border: '0px solid red'}}>Abstract Account Demo</div>
-                <AppConfig signer={signer!}/>
+                {aaAddrB.gt(parseEther("1")) &&<AppConfig signer={signer!} signerAddr={addr}/> }
             </div>
             <Space style={{clear: "both"}}>
                 <Input style={{width:'600px'}} placeholder={'Private Key'}
