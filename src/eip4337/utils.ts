@@ -91,19 +91,18 @@ export function formatBigNumber(arr: any[]) {
 
 export function mergeAbiAndData(abi: Array<ParamType>, data: ethers.utils.Result, prefix='  ') {
     const ret: any[] = []
-    abi.forEach((p, idx)=>{
-        console.log(`name is `, p.name)
+    abi?.forEach((p, idx)=>{
         if (p.baseType === 'array') {
             const str = prefix + '  ' + p.name + ': [\n'
-                + data[idx].map((row:any)=>mergeAbiAndData(p.components,row, prefix + '    ')).join(prefix + ',\n')
+                + (p.components ?
+                    data[idx].map((row:any)=>mergeAbiAndData(p.components,row, prefix + '    ')).join(prefix + ',\n')
+                    : data[idx].map((v:any)=>prefix + '    '+v).join('\n'))
                 + '\n' + prefix + '  ]'
             ret.push(str)
         } else if (p.components) {
-            console.log(`go children with data `, data[idx])
             const str = prefix + '  ' + p.name + ':' + mergeAbiAndData(p.components, data[idx], prefix + '  ')
             ret.push(str)
         } else {
-            console.log(`hit prop`)
             const str = prefix + '  ' + p.name + ': ' + data[idx];
             ret.push(str)
         }

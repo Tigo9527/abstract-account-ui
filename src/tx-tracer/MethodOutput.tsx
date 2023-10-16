@@ -21,9 +21,9 @@ export const MethodOutput = ({input, to}: { input?: string, to?: string }) => {
             <Popover content={
                 <div
                     style={{overflow: 'auto', maxWidth: '800px', maxHeight: '600px', wordWrap: 'break-word'}
-                }>{input}</div>}>
+                }>{v.short || input}</div>}>
                 {/*{v.short || input?.substring(0,10)}*/}
-                <InfoCircleFilled/>
+                Out
             </Popover>
         </>
     )
