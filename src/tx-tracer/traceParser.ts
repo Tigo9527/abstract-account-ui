@@ -16,6 +16,7 @@ export interface ITrace {
     id: number
     key?: number
     depthPrefix?: string
+    abi?: string
 }
 // const log = console.log
 const log = (...args)=>{}
@@ -65,4 +66,8 @@ function fillPrefix(parent:ITrace) {
         e.depthPrefix = parent.depthPrefix + '_' + idx
         fillPrefix(e)
     })
+}
+
+function parseCall() {
+
 }

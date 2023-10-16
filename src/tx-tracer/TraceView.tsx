@@ -7,6 +7,7 @@ import {MethodInput} from "./MethodInput.tsx";
 import {Addr} from "../component/Addr.tsx";
 import {AddrName} from "./AddrName.tsx";
 import {MethodOutput} from "./MethodOutput.tsx";
+import {AbiFunctionViewer} from "./AbiFunctionViewer.tsx";
 
 export const TraceView = () => {
     const columns: ColumnsType<ITrace> = [
@@ -58,6 +59,13 @@ export const TraceView = () => {
             title: 'output', key: 'output', render: (_, record: ITrace) => {
                 return (
                     <MethodOutput to={record.action.to} input={record.result?.output}/>
+                )
+            }
+        },
+        {
+            title: 'abiDecoded', key: 'abiDecoded', render: (_, record: ITrace) => {
+                return (
+                    record.id >= 0 ? <AbiFunctionViewer record={record}/> : 'hide dev'
                 )
             }
         },
