@@ -3,6 +3,7 @@ import {SimpleAccount} from "userop/dist/preset/builder";
 import {Signer, utils} from "ethers";
 import {EOASignature} from "userop/dist/preset/middleware";
 import {arrayify, defaultAbiCoder, hexConcat} from "ethers/lib/utils";
+import {BigNumber} from "ethers/lib.esm";
 
 export function signByPaymaster(signer: Signer, paymasterAddr: string) {
     return async (ctx: IUserOperationMiddlewareCtx)=>{
@@ -71,4 +72,18 @@ export async function rebuildAccountMiddlewares(simpleAccount: SimpleAccount,
     simpleAccount.useMiddleware(signFn || EOASignature(signer))
 
     return Promise.resolve(true)
+}
+
+export function formatBigNumber(arr: any[]) {
+    const ret = []
+    arr.forEach((key, idx, self)=>{
+        let item = self[idx]
+        if (Array.isArray(item)) {
+            item = formatBigNumber(item)
+        } else if (BigNumber.isBigNumber(item)) {
+            item = item.toString()
+        }
+        ret.push(item)
+    })
+    return ret;
 }
