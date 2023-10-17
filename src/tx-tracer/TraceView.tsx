@@ -8,6 +8,8 @@ import {AddrName} from "./AddrName.tsx";
 import {MethodOutput} from "./MethodOutput.tsx";
 import {AbiFunctionViewer} from "./AbiFunctionViewer.tsx";
 import {fakeDataErr} from "./fakeDataErr.ts";
+import {useState} from "react";
+import {traceContext} from "./Tracer.tsx";
 
 export const TraceView = () => {
     const columns: ColumnsType<ITrace> = [
@@ -58,7 +60,9 @@ export const TraceView = () => {
             }
         },
     ];
-    const data: ITrace[] = [buildTree(fakeData.result)]
+    const _data: ITrace[] = []//[buildTree(fakeData.result)]
+    const [data, setData] = useState(_data)
+    traceContext.setTrace = (res)=>setData(res.length ? [buildTree(res)] : [])
     return (
         <>
             <Table
