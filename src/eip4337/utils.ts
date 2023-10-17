@@ -1,8 +1,10 @@
 import {IUserOperationMiddlewareCtx} from "userop";
 import {SimpleAccount} from "userop/dist/preset/builder";
-import {Signer, utils} from "ethers";
+import {ethers, Signer, utils} from "ethers";
 import {EOASignature} from "userop/dist/preset/middleware";
 import {arrayify, defaultAbiCoder, hexConcat} from "ethers/lib/utils";
+import {BigNumber} from "ethers/lib.esm";
+import {ParamType} from "@ethersproject/abi/src.ts/fragments.ts";
 
 export function signByPaymaster(signer: Signer, paymasterAddr: string) {
     return async (ctx: IUserOperationMiddlewareCtx)=>{
@@ -71,4 +73,39 @@ export async function rebuildAccountMiddlewares(simpleAccount: SimpleAccount,
     simpleAccount.useMiddleware(signFn || EOASignature(signer))
 
     return Promise.resolve(true)
+}
+
+export function formatBigNumber(arr: any[]) {
+    const ret: any[] = []
+    arr.forEach((_: any, idx, self)=>{
+        let item = self[idx]
+        if (Array.isArray(item)) {
+            item = formatBigNumber(item)
+        } else if (BigNumber.isBigNumber(item)) {
+            item = item.toString()
+        }
+        ret.push(item)
+    })
+    return ret;
+}
+
+export function mergeAbiAndData(abi: Array<ParamType>, data: ethers.utils.Result, prefix='  ') {
+    const ret: any[] = []
+    abi?.forEach((p, idx)=>{
+        if (p.baseType === 'array') {
+            const str = prefix + '  ' + p.name + ': [\n'
+                + (p.components ?
+                    data[idx].map((row:any)=>mergeAbiAndData(p.components,row, prefix + '    ')).join(prefix + ',\n')
+                    : data[idx].map((v:any)=>prefix + '    '+v).join('\n'))
+                + '\n' + prefix + '  ]'
+            ret.push(str)
+        } else if (p.components) {
+            const str = prefix + '  ' + p.name + ':' + mergeAbiAndData(p.components, data[idx], prefix + '  ')
+            ret.push(str)
+        } else {
+            const str = prefix + '  ' + p.name + ': ' + data[idx];
+            ret.push(str)
+        }
+    })
+    return prefix + '{\n' + ret.join('\n') + '\n' + prefix + '}'
 }
