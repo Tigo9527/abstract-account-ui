@@ -14,10 +14,12 @@
     "antd": "^5.9.2",
     "ethers": "^5.7.2",
     "js-conflux-sdk": "^2.1.12",
+    "js-neurahive-sdk": "link:/Users/kang/work/ionian/js-neurahive-sdk",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
-    "userop": "^0.3.3"
+    "userop": "^0.3.3",
+    "vite-plugin-node-polyfills": "^0.15.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

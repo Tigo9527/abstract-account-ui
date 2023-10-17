@@ -8,6 +8,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import {Tracer} from "./tx-tracer/Tracer.tsx";
+import {UploadElem} from "./storage/Upload.tsx";
 
 const router = createBrowserRouter([
     {
@@ -15,8 +16,12 @@ const router = createBrowserRouter([
         element: <MyLayout/>,
     },{
         path: "/tracer", element: <Tracer/>,
+    },{
+        path: "/storage", element: <UploadElem/>,
     }
-]);
+], {
+    basename: undefined,
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
