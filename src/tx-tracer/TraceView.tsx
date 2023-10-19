@@ -1,13 +1,9 @@
-import {Badge, Space, Table, Tooltip} from "antd";
+import {Space, Table} from "antd";
 import {ColumnsType} from "antd/es/table";
 import {buildTree, ITrace} from "./traceParser.ts";
-import {fakeData} from "./fakeData.ts";
 import {formatEther} from "ethers/lib/utils";
-import {MethodInput} from "./MethodInput.tsx";
 import {AddrName} from "./AddrName.tsx";
-import {MethodOutput} from "./MethodOutput.tsx";
 import {AbiFunctionViewer} from "./AbiFunctionViewer.tsx";
-import {fakeDataErr} from "./fakeDataErr.ts";
 import {useState} from "react";
 import {traceContext} from "./Tracer.tsx";
 
@@ -62,7 +58,7 @@ export const TraceView = () => {
     ];
     const _data: ITrace[] = []//[buildTree(fakeData.result)]
     const [data, setData] = useState(_data)
-    traceContext.setTrace = (res)=>setData(res.length ? [buildTree(res)] : [])
+    traceContext.setTrace = (res:any)=>setData(res.length ? [buildTree(res)] : [])
     return (
         <>
             <Table

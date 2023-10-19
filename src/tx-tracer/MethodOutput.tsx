@@ -1,8 +1,7 @@
-import {Popover, Tooltip} from "antd";
+import {Popover} from "antd";
 import {useEffect, useState} from "react";
-import {InfoCircleFilled} from "@ant-design/icons";
 
-export const MethodOutput = ({input, to}: { input?: string, to?: string }) => {
+export const MethodOutput = ({input}: { input?: string, to?: string }) => {
     const [v, setV] = useState({text_signature: '', short: ''})
 
     useEffect(() => {

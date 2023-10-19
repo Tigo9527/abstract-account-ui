@@ -3,7 +3,8 @@ import {TxInput} from "./TxInput.tsx";
 import {TraceView} from "./TraceView.tsx";
 
 export const traceContext = {
-    setTrace: (rpcRet:any)=>{}
+    setTrace: (rpcRet:any)=>{
+        console.log(`rpc result is `, rpcRet)}
 }
 
 export const Tracer = ()=>{

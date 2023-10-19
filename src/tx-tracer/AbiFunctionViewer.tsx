@@ -1,8 +1,8 @@
 import {ITrace} from "./traceParser.ts";
 import {useEffect, useState} from "react";
-import {fetchWithCache} from "../logic/requestCache.ts";
+import {fetchWithCache, rpcHolder} from "../logic/requestCache.ts";
 import {ethers} from "ethers";
-import {Popover, Space} from "antd";
+import {Badge, Popover, Space} from "antd";
 import {mergeAbiAndData} from "../eip4337/utils.ts";
 import {hexlify} from "ethers/lib/utils";
 import {address} from "js-conflux-sdk";
@@ -11,6 +11,7 @@ import {MethodInput} from "./MethodInput.tsx";
 
 export const AbiFunctionViewer = ({record}:{record: ITrace})=>{
     const [hasSource, setHasSource] = useState('loading' as 'loading'|'src'|'miss')
+    const [err, setErr] = useState('')
     const [param, setParam] = useState({paramIn: '', paramOut: '', fn: ''})
     useEffect(()=>{
         const input = record.action.input
@@ -21,7 +22,7 @@ export const AbiFunctionViewer = ({record}:{record: ITrace})=>{
         if (!to) {
             return
         }
-        fetchWithCache(`/api?module=contract&action=getsourcecode&address=${to}`).then(res=> {
+        fetchWithCache(`${rpcHolder.api}/api?module=contract&action=getsourcecode&address=${to}`).then(res=> {
             const first = (res.result || [])[0];
             if (!first || !first.ABI) {
                 return null
@@ -31,7 +32,7 @@ export const AbiFunctionViewer = ({record}:{record: ITrace})=>{
                 if (!first?.Implementation?.startsWith('0x')) {
                     hex = hexlify(address.decodeCfxAddress(first.Implementation).hexAddress)
                 }
-                return fetchWithCache(`/api?module=contract&action=getsourcecode&address=${hex}`).then(res=> {
+                return fetchWithCache(`${rpcHolder.api}/api?module=contract&action=getsourcecode&address=${hex}`).then(res=> {
                     const first = (res.result || [])[0];
                     if (!first || !first.ABI) {
                         return null
@@ -70,13 +71,21 @@ export const AbiFunctionViewer = ({record}:{record: ITrace})=>{
                 setParam({paramIn: mergedStr, paramOut: out, fn: fn.format('full')})
                 break
             }
+        }).catch(e=>{
+            setErr(`failed to fetch: ${e}`)
         })
     }, [record])
-    if (hasSource === 'miss') {
-        return <MethodInput createType={record.action.createType}
+    if (hasSource === 'miss' || err) {
+        return <Space direction={'vertical'}>
+            {err && <Popover content={<div style={{maxWidth: '800px', wordWrap: 'break-word', overflow: "auto"}}>{err}</div>}
+            ><Badge color={'red'}/> api error</Popover>}
+            <MethodInput createType={record.action.createType}
                             to={record.action.to} input={record.action.input || record.action.init}
                             out={<MethodOutput to={record.action.to} input={record.result?.output}/>}
-        />
+            />
+        </Space> ;
+    } else if (hasSource === 'loading') {
+        return 'loading'
     }
     return (
         <Space direction={"vertical"}>

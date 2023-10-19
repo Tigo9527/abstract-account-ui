@@ -2,9 +2,8 @@ import {IUserOperationMiddlewareCtx} from "userop";
 import {SimpleAccount} from "userop/dist/preset/builder";
 import {ethers, Signer, utils} from "ethers";
 import {EOASignature} from "userop/dist/preset/middleware";
-import {arrayify, defaultAbiCoder, hexConcat} from "ethers/lib/utils";
+import {arrayify, defaultAbiCoder, hexConcat, ParamType} from "ethers/lib/utils";
 import {BigNumber} from "ethers/lib.esm";
-import {ParamType} from "@ethersproject/abi/src.ts/fragments.ts";
 
 export function signByPaymaster(signer: Signer, paymasterAddr: string) {
     return async (ctx: IUserOperationMiddlewareCtx)=>{

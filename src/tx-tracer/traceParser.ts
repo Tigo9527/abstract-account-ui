@@ -19,7 +19,6 @@ export interface ITrace {
     abi?: string
 }
 // const log = console.log
-const log = (...args)=>{}
 export function buildTree(arr: ITrace[]): ITrace {
     const parentQueue: ITrace[] = []
     let idx = 0;
@@ -29,30 +28,23 @@ export function buildTree(arr: ITrace[]): ITrace {
     });
     do {
         let cur = arr[idx++];
-        log(`idx ${cur.id}, from ${cur.action.from.substring(0, 6)} to ${cur.action.to?.substring(0,6)}, sub ${cur.subtraces}`)
         if (cur.subtraces > 0) {
-            log(`push cur and continue`)
             parentQueue.push(cur)
             continue
         }
         do {
             const parent = parentQueue.pop();
             if (!parent) {
-                log(`no parent`)
                 break
             }
-            log(`pop a parent ${parent.id}, sub ${parent.subtraces}`);
             if (!parent.children) {
-                log(`init children`);
                 parent.children = [];
             }
             parent.children.push(cur)
             if (parent.children.length < parent.subtraces) {
                 parentQueue.push(parent)
-                log(`not full ${parent.children.length} < ${parent.subtraces}`)
                 break // continue filling this parent
             }
-            log(`${parent.id} is full, ${parent.children.length} vs ${parent.subtraces}`)
             cur = parent
         } while(parentQueue.length)
     } while (idx<arr.length)
@@ -66,8 +58,4 @@ function fillPrefix(parent:ITrace) {
         e.depthPrefix = parent.depthPrefix + '_' + idx
         fillPrefix(e)
     })
-}
-
-function parseCall() {
-
 }
