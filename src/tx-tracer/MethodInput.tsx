@@ -4,7 +4,7 @@ import {fetchWithCache} from "../logic/requestCache.ts";
 import {ethers} from "ethers/lib.esm";
 import {formatBigNumber} from "../eip4337/utils.ts";
 
-const SystemContracts = {
+const SystemContracts:{[addr:string]: string} = {
     '0x0000000000000000000000000000000000000001': 'ecrecover',
     '0x0000000000000000000000000000000000000002': 'sha2-256',
     '0x0000000000000000000000000000000000000005': 'ModExp',
@@ -36,7 +36,7 @@ export const MethodInput=({input, to, createType, out}:{input?:string, createTyp
                 return;
             }
             // sort by length of function name
-            const sorted = res.results.sort((a,b)=>{
+            const sorted = res.results.sort((a:any,b:any)=>{
                 const diff = a.text_signature.indexOf('(') - b.text_signature.indexOf('(')
                 if (diff == 0) {
                     return a.text_signature.length - b.text_signature.length
