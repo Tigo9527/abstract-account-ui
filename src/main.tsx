@@ -8,6 +8,8 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import {Tracer} from "./tx-tracer/Tracer.tsx";
+import {TxList, TxPage} from "./storage/TxList.tsx";
+import {TxDetailWrap} from "./storage/TxDetail.tsx";
 
 const router = createBrowserRouter([
     {
@@ -15,6 +17,12 @@ const router = createBrowserRouter([
         element: <MyLayout/>,
     },{
         path: "/tracer", element: <Tracer/>,
+    },{
+        path: "/storage", element: <TxPage/>,
+        children: [
+            {index: true, element: <TxList/>,},
+            {path: 'detail/:txSeq', element: <TxDetailWrap/>}
+        ]
     }
 ]);
 

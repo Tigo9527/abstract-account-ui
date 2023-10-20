@@ -8,6 +8,7 @@ export const traceContext = {
 }
 
 export const Tracer = ()=>{
+    window.document.title = 'Tx Trace'
     return (
         <Space direction={'vertical'} style={{width: '100%'}}>
             Tracer
