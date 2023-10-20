@@ -50,7 +50,7 @@ export const TxDetail = ({txSeq}:{txSeq: number|string})=>{
                 <Descriptions.Item label="segments">{detail.pieceCounts}</Descriptions.Item>
             </Descriptions>
             {
-                detail.pieces?.map(p=>{
+                detail.pieces?.map((p:any)=>{
                     return (
                         <>
                             <Descriptions>
