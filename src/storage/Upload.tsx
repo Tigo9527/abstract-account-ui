@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {UploadOutlined} from '@ant-design/icons';
 import {Button, Card, message, Space, Upload} from 'antd';
 import type {UploadFile, UploadProps} from 'antd/es/upload/interface';
-import {NeurahiveFile} from "js-neurahive-sdk";
+require("js-neurahive-sdk/dist/");
 
 export const UploadElem: React.FC = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -14,7 +14,7 @@ export const UploadElem: React.FC = () => {
     const handleUpload = useCallback(async () => {
         const blob = fileList[0]
         console.log(`file is `, blob)
-        const file = NeurahiveFile.fromBlob(blob)
+        const file = window.neurahive.NeurahiveFile.fromBlob(blob)
         const [tree, err] = await file.merkleTree();
         if (err) {
             message.error(`failed to build merkle tree: ${err}`)
@@ -58,6 +58,7 @@ export const UploadElem: React.FC = () => {
 
     return (
         <Card>
+            <script src={'./neurahive.umd.js'}></script>\
             <Space direction={'vertical'}>
                 <Upload {...props}>
                     <Button icon={<UploadOutlined/>}>Select File</Button>
