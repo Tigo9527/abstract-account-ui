@@ -1,4 +1,4 @@
-import {Popover} from "antd";
+import {Popover, Typography} from "antd";
 import {useEffect, useState} from "react";
 
 export const MethodOutput = ({input}: { input?: string, to?: string }) => {
@@ -14,7 +14,9 @@ export const MethodOutput = ({input}: { input?: string, to?: string }) => {
             setV({text_signature: '', short: '0x' + input?.substr(-40)})
         }
     }, [input]);
-
+    if (!input) {
+        return  <Typography.Text disabled>Out</Typography.Text>
+    }
     return (
         <>
             <Popover content={
@@ -25,5 +27,5 @@ export const MethodOutput = ({input}: { input?: string, to?: string }) => {
                 Out
             </Popover>
         </>
-    )
+    );
 }

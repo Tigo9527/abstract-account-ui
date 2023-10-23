@@ -1,4 +1,4 @@
-import {Popover, Space, Tooltip} from "antd";
+import {Popover, Space, Tooltip, Typography} from "antd";
 import {ReactNode, useEffect, useState} from "react";
 import {fetchWithCache} from "../logic/requestCache.ts";
 import {ethers} from "ethers/lib.esm";
@@ -72,11 +72,12 @@ export const MethodInput=({input, to, createType, out}:{input?:string, createTyp
                     <div style={{overflow: 'auto', maxWidth: '800px', maxHeight: '600px', wordWrap:'break-word'}}
                     >{input}</div>
                 } placement={'left'}>In</Popover>}
-                {!v.isSystem && <Popover content={
+                {!v.isSystem && decoded && <Popover content={
                     <div style={{overflow: 'auto', maxWidth: '800px', maxHeight: '600px', wordWrap:'break-word'}}>
                         <pre>{decoded}</pre>
                     </div>
                 } placement={'left'}>In</Popover>}
+                {!decoded && <Typography.Text disabled>In</Typography.Text>}
                 {out}
             </Space>
         </Space>
