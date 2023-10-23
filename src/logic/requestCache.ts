@@ -5,18 +5,20 @@ export interface IRpcHost {
 export const rpcHolder: IRpcHost = {
     rpc: '', api: ''
 }
+const browserHost = window.location.hostname;
+const useDotNet = browserHost.endsWith('.net');
 export const rpcHost = {
     "test": {
         rpc: 'https://evmtestnet.confluxrpc.com',
-        api: 'https://evmapi-testnet.confluxscan.io'
+        api: useDotNet ? 'https://evmapi-testnet.confluxscan.net' : 'https://evmapi-testnet.confluxscan.io'
     },
     "evm": {
         rpc: 'https://evm.confluxrpc.com',
-        api: 'https://evmapi.confluxscan.io'
+        api: useDotNet ? 'https://evmapi.confluxscan.net' : 'https://evmapi.confluxscan.io'
     },
     other: {
         rpc: 'https://evmtestnet.confluxrpc.com',
-        api: 'http://localhost:5173',
+        api: 'https://evmapi-testnet.confluxscan.io',
     }
 }
 
