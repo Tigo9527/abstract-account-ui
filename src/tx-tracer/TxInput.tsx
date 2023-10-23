@@ -30,6 +30,10 @@ export const TxInput = () => {
         setError('')
         provider.send('trace_transaction', [txHash]).then(res => {
             console.log(`traces`, res)
+            if (res === null) {
+                setError(`tx not found`)
+                return
+            }
             traceContext.setTrace(res)
         }).catch(e => {
             setError(`failed to fetch trace: ${e}`)
