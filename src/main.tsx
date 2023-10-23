@@ -10,6 +10,7 @@ import {
 import {Tracer} from "./tx-tracer/Tracer.tsx";
 import {TxList, TxPage} from "./storage/TxList.tsx";
 import {TxDetailWrap} from "./storage/TxDetail.tsx";
+import {UploadElem} from "./storage/Upload.tsx";
 
 const router = createBrowserRouter([
     {
@@ -21,7 +22,8 @@ const router = createBrowserRouter([
         path: "/storage", element: <TxPage/>,
         children: [
             {index: true, element: <TxList/>,},
-            {path: 'detail/:txSeq', element: <TxDetailWrap/>}
+            {path: 'detail/:txSeq', element: <TxDetailWrap/>},
+            {path: 'upload', element: <UploadElem/>},
         ]
     }
 ]);

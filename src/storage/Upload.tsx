@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {UploadOutlined} from '@ant-design/icons';
 import {Button, Card, message, Space, Upload} from 'antd';
-import type {RcFile, UploadFile, UploadProps} from 'antd/es/upload/interface';
+import type {UploadFile, UploadProps} from 'antd/es/upload/interface';
 import {NeurahiveFile} from "js-neurahive-sdk";
 
 export const UploadElem: React.FC = () => {
