@@ -6,10 +6,13 @@ import {rpcHolder, rpcHost as rpcConf} from "../logic/requestCache.ts";
 import Search from "antd/es/input/Search";
 
 export const TxInput = () => {
+    const browserHost = window.location.hostname;
+    const initRpcSwith = browserHost.includes('evmtestnet') ? 'test':
+        browserHost.includes('evm') ? 'evm' : 'other';
     const [rpcHost, setRpcHost] = useState(rpcConf)
     const [txHash, setTxHash] = useState(window.location.href.split('#')[1] || '')
     const [error, setError] = useState('')
-    const [rpcSwitch, setRpcSwitch] = useState('test' as 'test' | 'evm' | 'other');
+    const [rpcSwitch, setRpcSwitch] = useState(initRpcSwith as 'test' | 'evm' | 'other');
 
     const provider = useMemo(() => {
         const apiKey = '3M5xMwYFc5otj9brLq3JRnFaeoC2XPAv8svHu8Co3b2jSd37bLA8UCQzsE64SN7Y9JRS4HNgM2My4aqVR41iwKDK8'
