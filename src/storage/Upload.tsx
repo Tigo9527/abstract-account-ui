@@ -12,8 +12,11 @@ export const UploadElem: React.FC = () => {
     })
 
     const handleUpload = useCallback(async () => {
+        setUploading(false)
         const blob = fileList[0]
         console.log(`file is `, blob)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const file = NeurahiveFile.fromBlob(blob)
         const [tree, err] = await file.merkleTree();
         if (err) {
