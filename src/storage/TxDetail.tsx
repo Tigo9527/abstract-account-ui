@@ -44,13 +44,13 @@ export const TxDetail = ({txSeqOrHash}: { txSeqOrHash: string }) => {
     }, [txSeq])
     return (
         <Space direction={'vertical'}>
-            {txSeq != undefined && !brief.loading && <Card size={'small'} style={{maxWidth: '1024px'}}>
+            {txSeq != undefined && !brief.loading && brief.timestamp && <Card size={'small'} style={{maxWidth: '1024px'}}>
                 <Descriptions title={`TxSeq#${txSeq}`}>
                     <Descriptions.Item span={3} label="From">{brief.from}</Descriptions.Item>
                     <Descriptions.Item span={3} label="TxHash">{brief.txHash}</Descriptions.Item>
                     <Descriptions.Item label="Data size">{brief.dataSize?.toLocaleString('en-US')}</Descriptions.Item>
                     <Descriptions.Item
-                        label="timestamp">{new Date(brief.timestamp * 1000).toISOString()}</Descriptions.Item>
+                        label="timestamp">{new Date((brief.timestamp||1) * 1000).toISOString()}</Descriptions.Item>
                     <Descriptions.Item label="status">{brief.status}</Descriptions.Item>
                 </Descriptions>
                 <Descriptions>
