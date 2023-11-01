@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {UploadOutlined} from '@ant-design/icons';
 import {Button, Card, message, Space, Upload} from 'antd';
 import type {UploadFile, UploadProps} from 'antd/es/upload/interface';
-import { NeurahiveFile } from 'js-neurahive-sdk';
+import {NHBlob} from 'js-neurahive-sdk';
 
 export const UploadElem: React.FC = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -17,7 +17,7 @@ export const UploadElem: React.FC = () => {
         console.log(`file is `, blob)
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const file = NeurahiveFile.fromBlob(blob)
+        const file = NHBlob(blob)
         const [tree, err] = await file.merkleTree();
         if (err) {
             message.error(`failed to build merkle tree: ${err}`)
