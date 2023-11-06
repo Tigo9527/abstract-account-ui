@@ -58,14 +58,7 @@ const router = createBrowserRouter([
                     const {TxDetailWrap} = await import("./storage/TxDetail.tsx");
                     return {Component: TxDetailWrap};
                 }
-            },
-            {
-                path: 'upload',
-                async lazy() {
-                    const {UploadElem} = await import("./storage/Upload.tsx");
-                    return {Component: UploadElem};
-                },
-            },
+            }
         ]
     },
 ]);
