@@ -13,7 +13,7 @@ export const TxPage = () => {
     window.document.title = 'Storage'
     return (
         <Space direction={'vertical'}>
-            <div style={{textAlign: 'right'}}><Link target={'_blank'} href={'/uploader/'}>Upload</Link></div>
+            <div style={{textAlign: 'right'}}><Link href={'/uploader/'}>Upload</Link></div>
             <Outlet/>
         </Space>
     )
