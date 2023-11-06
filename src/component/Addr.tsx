@@ -13,10 +13,10 @@ export function Addr({addr, short, checkCode=false, counter=0}:{addr:string, che
         EIP4337.provider.getCode(addr).then(res=>{
             setHasCode(res != '0x')
         });
-    }, [addr, counter])
+    }, [addr, checkCode, counter])
     return (
         <Space>
-            <Link target={'_blank'} href={`${EIP4337.scanUrl}/address/${addr}`}>{short ? addr?.substring(0,6).concat('...').concat(addr?.slice(-4)) : addr}</Link>
+            <Link style={{fontFamily: 'monospace'}} target={'_blank'} href={`${EIP4337.scanUrl}/address/${addr}`}>{short ? addr?.substring(0,6).concat('...').concat(addr?.slice(-4)) : addr}</Link>
             <CopyOutlined onClick={()=>navigator.clipboard.writeText(addr)}/>
             {checkCode && <Badge color={hasCode ? 'green': 'red'} text={hasCode ? 'Deployed': 'Not Deployed'} />}
         </Space>

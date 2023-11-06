@@ -1,33 +1,70 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import {MyLayout} from "./eip4337/Layout.tsx";
 import './App.css'
 import {
     createBrowserRouter,
-    RouterProvider,
+    RouterProvider, Link,
 } from "react-router-dom";
-import {Tracer} from "./tx-tracer/Tracer.tsx";
-import {TxList, TxPage} from "./storage/TxList.tsx";
-import {TxDetailWrap} from "./storage/TxDetail.tsx";
+import {Space} from "antd";
+
+const Root = () => {
+    return (
+        <Space direction={'vertical'}>
+            <Space>
+                <Link to={'tracer'}>Tracer</Link>
+                |
+                <Link to={'aaui'}>Abstract Account</Link>
+                |
+                <Link to={'storage'}>Storage</Link>
+            </Space>
+        </Space>
+    )
+}
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <MyLayout/>,
-    },{
-        path: "/tracer", element: <Tracer/>,
-    },{
-        path: "/storage", element: <TxPage/>,
+        path: '/',
+        element: <Root/>,
+    },
+    {
+        path: "aaui",
+        async lazy() {
+            const {MyLayout} = await import("./eip4337/Layout.tsx");
+            // abstract account
+            return {Component: MyLayout};
+        },
+    }, {
+        path: "tracer",
+        async lazy() {
+            const {Tracer} = await import("./tx-tracer/Tracer.tsx");
+            return {Component: Tracer};
+        },
+    }, {
+        path: "storage", async lazy() {
+            const {TxPage} = await import("./storage/TxList.tsx");
+            return {Component: TxPage};
+        },
         children: [
-            {index: true, element: <TxList/>,},
-            {path: 'detail/:txSeq', element: <TxDetailWrap/>}
+            {
+                index: true, async lazy() {
+                    const {TxList} = await import("./storage/TxList.tsx");
+                    return {Component: TxList};
+                },
+            },
+            {
+                path: 'detail/:txSeq',
+                async lazy() {
+                    const {TxDetailWrap} = await import("./storage/TxDetail.tsx");
+                    return {Component: TxDetailWrap};
+                }
+            }
         ]
-    }
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <RouterProvider router={router}/>
     </React.StrictMode>,
 )
