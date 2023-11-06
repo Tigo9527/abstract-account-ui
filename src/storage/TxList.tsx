@@ -46,7 +46,7 @@ export const TxList = () => {
             dataIndex: 'txHash',
             key: 'txHash',
             render: (v: string) => {
-                return <Link target={'_blank'} href={`${storageConf.blockChainScan}/tx/${v}`}>{v.substring(0, 6)}</Link>
+                return <Link style={{fontFamily: 'monospace'}} target={'_blank'} href={`${storageConf.blockChainScan}/tx/${v}`}>{v.substring(0, 6)}</Link>
             }
         },
         {
@@ -62,7 +62,7 @@ export const TxList = () => {
             dataIndex: 'timestamp',
             key: 'timestamp',
             render: (v: number) => {
-                return new Date(v * 1000).toISOString()
+                return <span style={{fontFamily: 'monospace'}}>{new Date(v * 1000).toISOString()}</span>
             }
         },
     ];
@@ -85,7 +85,7 @@ export const TxList = () => {
                             onClick={()=>setPage({...page, tick: Date.now()})} type={'text'}><ReloadOutlined/></Button></div>
                         <Table dataSource={data.list} columns={columns}
                                rowKey={'txSeq'}
-                               style={{minWidth: '800px'}}
+                               style={{minWidth: '800px', fontFamily: 'monospace'}}
                                pagination={{
                                    total: data.total,
                                    onChange: (pg, size: number) => {

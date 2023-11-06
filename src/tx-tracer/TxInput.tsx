@@ -17,7 +17,7 @@ export const TxInput = () => {
         rpcHolder.rpc = rpc
         rpcHolder.api = rpcHost[rpcSwitch].api
         return new ethers.providers.JsonRpcProvider(rpc.startsWith('https') ? rpc + '/' + apiKey : rpc)
-    }, [rpcSwitch, rpcHost.other.rpc, rpcHost.other.api])
+    }, [rpcSwitch, rpcHost])
 
     const loadTrace = useCallback(() => {
         if (!txHash) {
