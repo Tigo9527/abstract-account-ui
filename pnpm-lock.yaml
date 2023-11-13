@@ -2,6 +2,8 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ant-design/icons': ^5.2.6
+  '@conflux-dev/conflux-address-js': ^1.3.16
+  '@esbuild-plugins/node-globals-polyfill': ^0.2.3
   '@types/react': ^18.2.15
   '@types/react-dom': ^18.2.7
   '@typescript-eslint/eslint-plugin': ^6.0.0
@@ -22,6 +24,8 @@ specifiers:
 
 dependencies:
   '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
+  '@conflux-dev/conflux-address-js': 1.3.16
+  '@esbuild-plugins/node-globals-polyfill': 0.2.3
   antd: 5.9.2_biqbaboplfbrettd7655fr4n2y
   ethers: 5.7.2
   js-conflux-sdk: 2.1.12
@@ -129,6 +133,12 @@ packages:
 
   /@emotion/unitless/0.7.5:
     resolution: {integrity: sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==}
+    dev: false
+
+  /@esbuild-plugins/node-globals-polyfill/0.2.3:
+    resolution: {integrity: sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==}
+    peerDependencies:
+      esbuild: '*'
     dev: false
 
   /@esbuild/android-arm/0.18.20:

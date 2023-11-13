@@ -17,6 +17,7 @@ const Root = () => {
                 <Link to={'aaui'}>Abstract Account</Link>
                 |
                 <Link to={'storage'}>Storage</Link>
+                | <Link to={'migrator'}>Nft</Link>
             </Space>
         </Space>
     )
@@ -33,6 +34,12 @@ const router = createBrowserRouter([
             const {MyLayout} = await import("./eip4337/Layout.tsx");
             // abstract account
             return {Component: MyLayout};
+        },
+    }, {
+        path: "migrator",
+        async lazy() {
+            const {Migrator} = await import("./nft/migrator.tsx");
+            return {Component: Migrator};
         },
     }, {
         path: "tracer",

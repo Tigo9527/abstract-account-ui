@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@conflux-dev/conflux-address-js": "^1.3.16",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "antd": "^5.9.2",
     "ethers": "^5.7.2",
     "js-conflux-sdk": "^2.1.12",

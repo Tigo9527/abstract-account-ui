@@ -1,0 +1,66 @@
+import {BigNumberish, ethers} from "ethers";
+import {Space} from "antd";
+import {useCallback, useEffect, useState} from "react";
+import {fetchJson} from "ethers/lib/utils";
+import {mergeV} from "../logic/utils.ts";
+
+type Param = {
+    contract: ethers.Contract, tokenId: BigNumberish
+}
+type MetaData = {
+    uri: string, image: string, metaStr: string,
+    error: string,
+}
+export const MetaView = ({contract, tokenId}:Param) => {
+    const [v, setV] = useState<Partial<MetaData>>({})
+    const clearError = ()=>{
+        setV(v=>mergeV(v, {error: ''}))
+    }
+    const update = useCallback(()=>{
+        console.log(`token id `, tokenId)
+        if (!contract || typeof(tokenId) === 'string') {
+            console.log(`returned, `, typeof(tokenId))
+            return
+        }
+        clearError()
+        contract.tokenURI(tokenId).then((res:string)=>{
+            setV(v=>mergeV(v, {uri: res}))
+        }).catch((e: Error)=>{
+            setV(v=>mergeV(v, {error: `Failed to call tokenURI: ${e}`}))
+        })
+    }, [contract, tokenId])
+    useEffect(()=>{
+        update()
+    }, [update])
+    useEffect(()=>{
+        if (!v.uri) {
+            return
+        }
+        clearError();
+        const reqUrl = v.uri.includes("{id}") ?
+            v.uri.replace("{id}", ethers.utils.hexlify(tokenId).substring(2).padStart(64, '0'))
+            : v.uri
+        fetchJson(reqUrl).then(res=>{
+            setV(v=>mergeV(v, {
+                metaStr: JSON.stringify(res, null, 4),
+                image: res?.image
+            }))
+        }).catch((e:Error)=>{
+            setV(v=>mergeV(v, {error: `Failed to fetch meta: ${e}`}))
+        })
+    }, [tokenId, v.uri])
+    return (
+        <Space direction={'vertical'} style={{textAlign: 'left', width: '800px', }}>
+            <div>Sample Token ID: {tokenId.toString()}</div>
+            <Space><div>URI: {v.uri}</div></Space>
+            <div style={{maxWidth: '800px', overflow: "auto"}}>Meta data: <pre>{v.metaStr}</pre></div>
+            <div style={{overflow: "auto"}}>Image: {v.image}</div>
+            {v.image &&
+                <div>
+                    <img style={{maxWidth: '800px'}} src={v.image} alt={v.image}/>
+                </div>
+            }
+            <div style={{color: 'red', maxWidth: '800px'}}>{v.error}</div>
+        </Space>
+    )
+}
