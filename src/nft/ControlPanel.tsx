@@ -62,6 +62,7 @@ export const ControlPanel = ({addr, sampleId}: Param) => {
     const addMigration = useCallback(()=>{
         const str = {
             "core": "https://main.confluxrpc.com",
+            "test": "https://test.confluxrpc.com",
             "evm": "https://evm.confluxrpc.com/cfxbridge",
             "evm test": "https://evmtestnet.confluxrpc.com/cfxbridge"
         }[getChain()]
@@ -90,15 +91,18 @@ export const ControlPanel = ({addr, sampleId}: Param) => {
         return "loading..."
     }
     return (
-        <Card title={<>Migration Info <Button onClick={fetchInfo} type={'text'} size={'small'} onMouseDown={e=>e.preventDefault()}><ReloadOutlined/></Button></>} size={'small'}>
-        <Space style={{textAlign: 'left'}} direction={'vertical'}>
+        <Card title={<>Migration Info <Button
+            onClick={fetchInfo} type={'text'}
+            size={'small'} onMouseDown={e=>e.preventDefault()}
+        ><ReloadOutlined/></Button></>} size={'small'}>
+        <Space style={{textAlign: 'left', width: '100%', }} direction={'vertical'}>
                 {v.id === undefined &&
                 <Space>
                         <>No migration record.</>
                     <Button size={'small'} onClick={addMigration}>Add Migration</Button>
                 </Space>
                 }
-            <div style={{display: v.status ? 'flex' : 'none', justifyContent: 'space-evenly', minWidth: '800px'}}>
+            <div style={{display: v.status ? 'flex' : 'none', justifyContent: 'space-evenly', border: '0px solid blue'}}>
                 <div>Status: {v.status}</div>
                 {v.status === 'download' && (v.downloadedMeta ?? 0) > 0 &&
                     <div><Button type={'default'} onClick={goToNextStep} size={'small'}>Go to next step</Button></div>
@@ -106,7 +110,7 @@ export const ControlPanel = ({addr, sampleId}: Param) => {
                 {v.status?.includes("waitUploading") &&
                     <div><Button type={'default'} onClick={abortMigration} size={'small'}>Abort and delete Task</Button></div>
                 }
-                {v.status == 'finished' &&
+                {(v.status == 'finished' || v.status == 'download') &&
                     <div><Button type={'default'} onClick={deleteMigration} size={'small'}>Delete record</Button></div>
                 }
                 <div>Downloaded meta data count: {v.downloadedMeta}</div>

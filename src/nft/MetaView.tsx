@@ -50,11 +50,11 @@ export const MetaView = ({contract, tokenId}:Param) => {
         })
     }, [tokenId, v.uri])
     return (
-        <Space direction={'vertical'} style={{textAlign: 'left', width: '800px', }}>
+        <Space direction={'vertical'} style={{textAlign: 'left', border: '0px solid white'}}>
             <div>Sample Token ID: {tokenId.toString()}</div>
-            <Space><div>URI: {v.uri}</div></Space>
-            <div style={{maxWidth: '800px', overflow: "auto"}}>Meta data: <pre>{v.metaStr}</pre></div>
-            <div style={{overflow: "auto"}}>Image: {v.image}</div>
+            <div style={{width: '800px', overflow: "auto"}}>URI: {v.uri}</div>
+            <div style={{maxWidth: '800px', maxHeight: '200px', overflow: "auto"}}>Meta data: <pre>{v.metaStr}</pre></div>
+            <div style={{maxWidth: '800px', overflow: "auto"}}>Image: {v.image}</div>
             {v.image &&
                 <div>
                     <img style={{maxWidth: '800px'}} src={v.image} alt={v.image}/>

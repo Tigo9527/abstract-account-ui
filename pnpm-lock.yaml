@@ -2,8 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ant-design/icons': ^5.2.6
-  '@conflux-dev/conflux-address-js': ^1.3.16
-  '@esbuild-plugins/node-globals-polyfill': ^0.2.3
+  '@conflux-dev/conflux-address-js': ^1.3.17
   '@types/react': ^18.2.15
   '@types/react-dom': ^18.2.7
   '@typescript-eslint/eslint-plugin': ^6.0.0
@@ -25,8 +24,7 @@ specifiers:
 
 dependencies:
   '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
-  '@conflux-dev/conflux-address-js': 1.3.16
-  '@esbuild-plugins/node-globals-polyfill': 0.2.3
+  '@conflux-dev/conflux-address-js': 1.3.17
   antd: 5.9.2_biqbaboplfbrettd7655fr4n2y
   ethers: 5.7.2
   js-conflux-sdk: 2.1.12
@@ -118,8 +116,8 @@ packages:
       regenerator-runtime: 0.14.0
     dev: false
 
-  /@conflux-dev/conflux-address-js/1.3.16:
-    resolution: {integrity: sha512-9n7wFCr7Wu4WYdngPfxB63bRHSk+0xWFHVqVwUPddg3oIRT+sQm+TcHGiXaiuvnjnvjDFfCMbHnjZ+a8X5C/aA==}
+  /@conflux-dev/conflux-address-js/1.3.17:
+    resolution: {integrity: sha512-pdCJt86pjE/txtUSolSmEQYN8KAOk5TtO5sA3Dr1535KpPpxlElXGDuA+XkAppS/mSSNSZe7Ms5pAkLWorWudg==}
     dependencies:
       jsbi: 3.2.5
     dev: false
@@ -135,12 +133,6 @@ packages:
 
   /@emotion/unitless/0.7.5:
     resolution: {integrity: sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==}
-    dev: false
-
-  /@esbuild-plugins/node-globals-polyfill/0.2.3:
-    resolution: {integrity: sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==}
-    peerDependencies:
-      esbuild: '*'
     dev: false
 
   /@esbuild/android-arm/0.18.20:
@@ -2299,7 +2291,7 @@ packages:
     resolution: {integrity: sha512-UxR00HnpcTld8WqGmim3efRFfjXs+P/mS1CRBcgJmlvol65GizNY+IGGHmjMPKPqYSJm2i5scK9A5sm6zBo3VA==}
     hasBin: true
     dependencies:
-      '@conflux-dev/conflux-address-js': 1.3.16
+      '@conflux-dev/conflux-address-js': 1.3.17
       abi-util-lite: 0.1.0
       big.js: 5.2.2
       commander: 8.3.0

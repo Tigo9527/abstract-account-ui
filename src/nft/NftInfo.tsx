@@ -27,7 +27,7 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
         if (!addr || !provider) {
             return
         }
-        const hex = addr.startsWith("0x") ? addr : '0x'+decode(addr).hexAddress.toString('hex')
+        const hex = addr.startsWith("0x") ? addr : ethers.utils.hexlify(decode(addr).hexAddress)
         const abi = [
             "function name() view returns (string memory)",
             "function symbol() view returns (string memory)",
@@ -61,12 +61,12 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
     }, [contract])
     return (
         <Space direction={'vertical'}>
-            <div style={{display: 'flex', justifyContent: 'space-evenly', minWidth: '800px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-evenly', width: '800px'}}>
                 <div>Name: {v.name}</div>
                 <div>Symbol: {v.symbol}</div>
                 <div>Total supply: {v.totalSupply}</div>
             </div>
-            {v.error && <div style={{color: 'red'}}>{v.error}</div>}
+            {v.error && <div style={{color: 'red', width: '800px'}}>{v.error}</div>}
             <ControlPanel addr={contract?.address} sampleId={v.firstTokenId}/>
             {contract && Boolean(v.firstTokenId) &&
                 <MetaView contract={contract} tokenId={v.firstTokenId!}/>

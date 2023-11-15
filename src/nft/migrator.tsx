@@ -11,12 +11,22 @@ type Param = {
 }
 
 export const Migrator = () => {
+    window.document.title = 'NFT Meta'
     const rpc = EIP4337.nodeRpc;
     const addr = '0xb6D4B580AE43C245c2E9BE0fB464a89E770392CF'
     const [v, setV] = useState<Partial<Param>>({rpc, addr, chain: 'evm test'})
     const chains: string[] = [
-        "core", "evm", "evm test"
+        "core", "test", "evm", "evm test"
     ]
+    const sampleContracts = {
+        "core": [
+            {name: "TaoPai", addr: "cfx:achew68x34cwu04aezbunyaz67gppakvmyn79tau56"},
+            {name: "LiangZi", addr: "cfx:acdc52ftht4a43e9uk7zud4jthk6rbbrxjjn881x1v"}
+        ],
+        "test": [{name: "test", addr: "cfxtest:acafj6suf4z17rhdz0zzb66729rnzun8tage6er7ta"}],
+        "evm": [{name: "hero", addr: "0x634e34e0f9c09dba2e61a398f7b76e6327b97916"}],
+        "evm test": [{name: "Demo721", addr}],
+    }
     const chainOps = chains.map(chain => {
         return {label: chain, value: chain}
     })
@@ -26,30 +36,33 @@ export const Migrator = () => {
         }
         setChain(v.chain);
         const useRcp = {
-            // "core": "https://main-evmbridge.confluxrpc.com", // CORS problem
-            "core": "http://43.198.102.234/evmbridge1029", // fix CORS
+            "core": "https://main-evmbridge.confluxrpc.com",
+            "test": "https://test-evmbridge.confluxrpc.com",
             "evm": "https://evm.confluxrpc.com",
             "evm test": "https://evmtestnet.confluxrpc.com",
         }[v.chain]
         setV(v => mergeV(v, {rpc: useRcp}))
     }, [v.chain])
     return (
-        <Space direction={'vertical'} style={{textAlign: 'left', minWidth: '800px'}}>
+        <Space direction={'vertical'} style={{textAlign: 'left', width: '800px'}}>
             <h4 style={{textAlign: 'center',}}>Migrate NFT meta and resource to storage</h4>
             <Card title={"Chain and Contract"} size={'small'}>
                 <Space direction={'vertical'} style={{textAlign: 'left', width: '100%'}}>
                     <Space>Chain: <Radio.Group options={chainOps} onChange={(e) => {
                         setV(v => mergeV(v, {chain: e.target.value}))
-                    }} value={v.chain}/> |
-                        <div> RPC: {v.rpc}</div>
+                    }} value={v.chain}/>
+                        {/*|*/}
+                        {/*<div> RPC: {v.rpc}</div>*/}
                     </Space>
                     <Search value={v.addr} onChange={(elem) => setV(v => mergeV(v, {addr: elem.target.value}))}/>
                     <Space>Sample Contract:
-                        <Button onClick={() => setV(v => mergeV(v, {
-                            addr: 'cfx:achew68x34cwu04aezbunyaz67gppakvmyn79tau56'
-                        }))} onMouseDown={e => e.preventDefault()} type={'default'} size={'small'}>TaoPai</Button>
-                        <Button onClick={() => setV(v => mergeV(v, {addr: addr}))}
-                                onMouseDown={e => e.preventDefault()} type={'default'} size={'small'}>Demo721</Button>
+                        {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            (sampleContracts[v.chain] || []).map(({addr, name})=>{
+                                return <Button onClick={() => setV(v => mergeV(v, {addr: addr}))}
+                                        onMouseDown={e => e.preventDefault()} type={'default'} size={'small'}>{name}</Button>
+                        })}
                     </Space>
                 </Space>
             </Card>
