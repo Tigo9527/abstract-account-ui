@@ -32,32 +32,26 @@ export const MethodInput=({input, to, createType, out}:{input?:string, createTyp
         // https://www.4byte.directory/api/v1/signatures/?format=json&hex_signature=0x16334de7
         const url = `https://www.4byte.directory/api/v1/signatures/?format=json&hex_signature=${input!.substring(0,10)}`;
         fetchWithCache(url).then(res=>{
+            // console.log(`res abi info`, res)
             if (!res.results.length) {
                 return;
             }
-            // sort by length of function name
-            const sorted = res.results.sort((a:any,b:any)=>{
-                const diff = a.text_signature.indexOf('(') - b.text_signature.indexOf('(')
-                if (diff == 0) {
-                    return a.text_signature.length - b.text_signature.length
-                }
-                return  diff
-            })
-            const [{text_signature}] = sorted;
-            setV({text_signature: text_signature, short: text_signature?.substring(0, text_signature?.indexOf('(')), isSystem: false})
-            if (text_signature) {
-                const i = new ethers.utils.Interface([`function ${text_signature}`])
-                let params: any;
+            for (const fn of res.results) {
+                const text_signature = fn.text_signature
                 try {
-                    params = i.decodeFunctionData(text_signature, input!);
+                    const i = new ethers.utils.Interface([`function ${text_signature}`])
+                    const params = i.decodeFunctionData(text_signature, input!);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    setDecoded(JSON.stringify(formatBigNumber(params), null, 4))
+                    setV({text_signature: text_signature, short: text_signature?.substring(0, text_signature?.indexOf('(')), isSystem: false})
+                    break
                 } catch (e) {
-                    console.log(`decodeFunctionData error: ${text_signature}`, e)
+                    console.log(`decodeFunctionData error: [${text_signature}] : ${e}`)
                 }
-                // console.log(`params is `, formatBigNumber(params))
-                params && setDecoded(JSON.stringify(formatBigNumber(params), null, 4))
             }
         })
-    }, [input]);
+    }, [input, createType, to]);
 
     return(
         <Space direction={'vertical'}>
