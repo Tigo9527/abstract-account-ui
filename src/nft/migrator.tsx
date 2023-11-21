@@ -1,16 +1,27 @@
-import {Button, Card, Radio, Space} from "antd";
+import {Button, Card, Radio, Space, Tabs} from "antd";
 import Search from "antd/es/input/Search";
 import {useEffect, useState} from "react";
 import {NftInfo} from "./NftInfo.tsx";
 import {EIP4337} from "../eip4337/conf.ts";
 import {mergeV} from "../logic/utils.ts";
 import {setChain} from "./nftLogic.ts";
+import {BuildMeta} from "./BuildMeta.tsx";
 
 type Param = {
     rpc: string, addr: string, chain: string
 }
 
 export const Migrator = () => {
+    return <Card>
+        <h4 style={{textAlign: 'center',}}>Migrate NFT meta and resource to storage</h4>
+
+        <Tabs items={[
+            {key: "1", label: "Migrate", children: <MigratorIndex/>},
+            {key: "2", label: "Build Meta", children: <BuildMeta/>},
+        ]}></Tabs>
+    </Card>
+}
+export const MigratorIndex = () => {
     window.document.title = 'NFT Meta'
     const rpc = EIP4337.nodeRpc;
     const addr = '0xb6D4B580AE43C245c2E9BE0fB464a89E770392CF'
@@ -45,7 +56,6 @@ export const Migrator = () => {
     }, [v.chain])
     return (
         <Space direction={'vertical'} style={{textAlign: 'left', width: '800px'}}>
-            <h4 style={{textAlign: 'center',}}>Migrate NFT meta and resource to storage</h4>
             <Card title={"Chain and Contract"} size={'small'}>
                 <Space direction={'vertical'} style={{textAlign: 'left', width: '100%'}}>
                     <Space>Chain: <Radio.Group options={chainOps} onChange={(e) => {
@@ -59,10 +69,11 @@ export const Migrator = () => {
                         {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
-                            (sampleContracts[v.chain] || []).map(({addr, name})=>{
-                                return <Button onClick={() => setV(v => mergeV(v, {addr: addr}))}
-                                        onMouseDown={e => e.preventDefault()} type={'default'} size={'small'}>{name}</Button>
-                        })}
+                            (sampleContracts[v.chain] || []).map(({addr, name}) => {
+                                return <Button key={name} onClick={() => setV(v => mergeV(v, {addr: addr}))}
+                                               onMouseDown={e => e.preventDefault()} type={'default'}
+                                               size={'small'}>{name}</Button>
+                            })}
                     </Space>
                 </Space>
             </Card>
