@@ -4,7 +4,7 @@ import {Space} from "antd";
 import {BigNumberish} from "ethers";
 import {MetaView} from "./MetaView.tsx";
 import {ControlPanel} from "./ControlPanel.tsx";
-import {decode, isValidCfxAddress} from "@conflux-dev/conflux-address-js"
+import {decode, isValidCfxAddress, isValidHexAddress} from "@conflux-dev/conflux-address-js"
 import {formatCallException} from "../logic/utils.ts";
 
 export type NftInfoParam = {
@@ -27,7 +27,15 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
         if (!addr || !provider) {
             return
         }
-        const hex = addr.startsWith("0x") ? addr : ethers.utils.hexlify(decode(addr).hexAddress)
+        let hex: string;
+        if (isValidHexAddress(addr)) {
+            hex = addr
+        } else if (isValidCfxAddress(addr)) {
+            hex = ethers.utils.hexlify(decode(addr).hexAddress)
+        } else {
+            setV({error: 'invalid contract address'})
+            return undefined
+        }
         const abi = [
             "function name() view returns (string memory)",
             "function symbol() view returns (string memory)",
