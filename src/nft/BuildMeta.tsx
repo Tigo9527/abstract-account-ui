@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Button, Form, Input, Space, Upload} from 'antd';
+import {Button, Form, Input, Space, Spin, Upload} from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import {UploadOutlined} from "@ant-design/icons";
 import Link from 'antd/es/typography/Link';
@@ -104,6 +104,7 @@ export const BuildMeta: React.FC = () => {
             {v?.image &&
                 <Space>Image: <Link href={`${v.image}`} target={'_blank'}>{v.image}</Link></Space>
             }
+            {v?.loading && <Spin/>}
             <div style={{color:'red'}}>
                 { (v && !v.meta && !v.image && !v.loading) ? `${JSON.stringify(v)}` : "" }
             </div>
