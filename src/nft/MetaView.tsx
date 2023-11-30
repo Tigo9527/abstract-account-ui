@@ -5,13 +5,13 @@ import {fetchJson} from "ethers/lib/utils";
 import {mergeV} from "../logic/utils.ts";
 
 type Param = {
-    contract: ethers.Contract, tokenId: BigNumberish
+    contract: ethers.Contract, tokenId: BigNumberish, erc: string,
 }
 type MetaData = {
     uri: string, image: string, metaStr: string,
     error: string,
 }
-export const MetaView = ({contract, tokenId}:Param) => {
+export const MetaView = ({contract, tokenId, erc}:Param) => {
     const [v, setV] = useState<Partial<MetaData>>({})
     const clearError = ()=>{
         setV(v=>mergeV(v, {error: ''}))
@@ -23,12 +23,17 @@ export const MetaView = ({contract, tokenId}:Param) => {
             return
         }
         clearError()
-        contract.tokenURI(tokenId).then((res:string)=>{
+        const method = {'1155':'uri', '721':'tokenURI'}[erc]
+        if (!method) {
+            setV({error: `unknown erc type [${erc}]`})
+            return;
+        }
+        contract[method](tokenId).then((res:string)=>{
             setV(v=>mergeV(v, {uri: res}))
         }).catch((e: Error)=>{
-            setV(v=>mergeV(v, {error: `Failed to call tokenURI: ${e}`}))
-        })
-    }, [contract, tokenId])
+            setV(v=>mergeV(v, {error: `Failed to call ${method}: ${e}`}))
+        });
+    }, [erc, contract, tokenId])
     useEffect(()=>{
         update()
     }, [update])

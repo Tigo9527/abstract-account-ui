@@ -8,7 +8,7 @@ import {convertStatus600, mergeV} from "../logic/utils.ts";
 import {getChain} from "./nftLogic.ts";
 
 type Param = {
-    addr?: string, sampleId?: string|BigNumberish|null,
+    addr?: string, sampleId?: string|BigNumberish|null, erc: string,
 }
 type MigData = {
     id: number
@@ -21,7 +21,7 @@ type MigData = {
     // ui
     error: string, loading: boolean
 }
-export const ControlPanel = ({addr, sampleId}: Param) => {
+export const ControlPanel = ({addr, sampleId, erc}: Param) => {
     const metaHost = window.location.protocol.startsWith("https") ? "" : "https://www.clonex.fun"
     const [v, setV] = useState<Partial<MigData>>({loading: true})
 
@@ -71,7 +71,7 @@ export const ControlPanel = ({addr, sampleId}: Param) => {
             return;
         }
         const chainRpc = encodeURIComponent(str!);
-        fetchJson(`/nft-house/add-migration?addr=${addr}&chainRpc=${chainRpc}`, "{}").then(res=> {
+        fetchJson(`/nft-house/add-migration?addr=${addr}&chainRpc=${chainRpc}&erc=${erc}`, "{}").then(res=> {
             console.log(`add-migration result`, res)
         }).then(()=>{
             fetchInfo()
@@ -85,7 +85,7 @@ export const ControlPanel = ({addr, sampleId}: Param) => {
             // console.log(`error keys `, Object.keys(e))
             // console.log(`error is `, e.body)
         })
-    }, [addr, fetchInfo])
+    }, [addr, fetchInfo, erc])
 
     if (v.loading) {
         return "loading..."
@@ -96,7 +96,7 @@ export const ControlPanel = ({addr, sampleId}: Param) => {
             size={'small'} onMouseDown={e=>e.preventDefault()}
         ><ReloadOutlined/></Button></>} size={'small'}>
         <Space style={{textAlign: 'left', width: '100%', }} direction={'vertical'}>
-                {v.id === undefined &&
+                {v.id === undefined && (erc === '721' || erc === '1155') &&
                 <Space>
                         <>No migration record.</>
                     <Button size={'small'} onClick={addMigration}>Add Migration</Button>

@@ -17,7 +17,7 @@ const Root = () => {
                 <Link to={'aaui'}>Abstract Account</Link>
                 |
                 <Link to={'storage'}>Storage</Link>
-                | <Link to={'migrator'}>Nft</Link>
+                | <Link to={'migrator'}>NFT</Link>
             </Space>
         </Space>
     )
