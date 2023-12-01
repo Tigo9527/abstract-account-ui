@@ -28,7 +28,7 @@ export const MigratorIndex = () => {
     const chains: string[] = [
         "core", "test", "evm", "evm test"
     ]
-    const sampleContracts = {
+    const sampleContracts: any = {
         "core": [
             {name: "TaoPai", addr: "cfx:achew68x34cwu04aezbunyaz67gppakvmyn79tau56"},
             {name: "LiangZi", addr: "cfx:acdc52ftht4a43e9uk7zud4jthk6rbbrxjjn881x1v"}
@@ -64,7 +64,8 @@ export const MigratorIndex = () => {
                         {/*<div> RPC: {v.rpc}</div>*/}
                     </Space>
                     <Search value={v.addr} onChange={(elem) => setV(v => mergeV(v, {addr: elem.target.value}))}/>
-                    <Space>Sample Contract:
+                    { window.location.hostname === 'localhost' &&
+                        <Space>Sample Contract:
                         {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
@@ -73,7 +74,7 @@ export const MigratorIndex = () => {
                                                onMouseDown={e => e.preventDefault()} type={'default'}
                                                size={'small'}>{name}</Button>
                             })}
-                    </Space>
+                        </Space>}
                 </Space>
             </Card>
             <NftInfo addr={v.addr} rpcUrl={v.rpc}/>

@@ -115,13 +115,14 @@ export const ControlPanel = ({addr, sampleId, erc}: Param) => {
                 {(v.status == 'finished' || v.status == 'download') &&
                     <div><Button type={'default'} onClick={deleteMigration} size={'small'}>Delete record</Button></div>
                 }
-                <div>Downloaded meta data count: {v.downloadedMeta}</div>
+                <div>Downloaded meta data count: {v.downloadedMeta}
+                    <span style={{color:'orange'}}>{v.status == 'finished' && ((v.downloadedMeta || 0) < (v.totalSupply || 0)) ? " (reaches server side limit)":""}</span>
+                </div>
             </div>
             <div style={{display: v.status ? "" : 'none'}}>
                 <div>Meta Root Hash: {v.root}</div>
                 {v.metaUploaded && <>
-                    <div>Sample meta:
-                        <Link target={"_blank"} href={`${metaHost}/nft-house/storage/meta/${v.root}/${sampleId}`}>
+                    <div>Sample meta: <Link target={"_blank"} href={`${metaHost}/nft-house/storage/meta/${v.root}/${sampleId}`}>
                             {v.root ? 'preview' : ''}
                         </Link>
                     </div>

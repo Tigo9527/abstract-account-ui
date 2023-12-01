@@ -56,7 +56,7 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
         if (!contract) {
             return
         }
-        setV({error: ''})
+        setV({error: '', is721: false, is1155: false})
         const ERC1155InterfaceId: string = "0xd9b67a26";
         const ERC721InterfaceId: string = "0x80ac58cd";
         Promise.allSettled([
@@ -67,13 +67,14 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
             contract.supportsInterface(ERC721InterfaceId),
             contract.supportsInterface(ERC1155InterfaceId),
         ]).then(([name, symbol, sup, tokenId, check721, check1155])=>{
+            console.log(`721 ret`, check721, `1155 ret`, check1155)
             setV({
                 name: name.status === 'fulfilled' ? name.value : formatCallException(name.reason),
                 symbol: symbol.status === 'fulfilled' ? symbol.value : formatCallException(symbol.reason),
                 totalSupply: sup.status === 'fulfilled' ? `${sup.value}` : formatCallException(sup.reason),
                 firstTokenId: tokenId.status === 'fulfilled' ? tokenId.value : formatCallException(tokenId.reason)+":tokenByIndex",
-                is721: check721.status === 'fulfilled' ? check721.value : formatCallException(check721.reason),
-                is1155: check1155.status === 'fulfilled' ? check1155.value : formatCallException(check1155.reason),
+                is721: check721.status === 'fulfilled' ? check721.value : false,
+                is1155: check1155.status === 'fulfilled' ? check1155.value : false,
                 error: ([name.status, symbol.status, sup.status, tokenId.status].find(o=>o==='rejected'))
                     ? "An error occurred. Please ensure that the contract exists on the selected chain and supports relevant functions." : ""
             })
@@ -87,8 +88,8 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
                 <div>Total supply: {v.totalSupply}</div>
                 <div>ERC: {erc}</div>
             </div>
-            {v.error && <div style={{color: 'red', width: '800px'}}>{v.error}</div>}
-            <ControlPanel addr={contract?.address} sampleId={v.firstTokenId} erc={erc}/>
+            {v.error && <div style={{color: 'red', width: '800px'}}>{v.error} {v.is721 ? "721":""}</div>}
+            {!v.error && <ControlPanel addr={contract?.address} sampleId={v.firstTokenId} erc={erc}/>}
             {contract && Boolean(v.firstTokenId) &&
                 <MetaView contract={contract} tokenId={v.firstTokenId!} erc={erc}/>
             }
