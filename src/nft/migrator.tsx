@@ -23,8 +23,9 @@ export const Migrator = () => {
 export const MigratorIndex = () => {
     window.document.title = 'NFT Meta'
     const rpc = EIP4337.nodeRpc;
-    const addr = '0xb6D4B580AE43C245c2E9BE0fB464a89E770392CF'
-    const [v, setV] = useState<Partial<Param>>({rpc, addr, chain: 'evm test'})
+    const isLocal = window.location.hostname === 'localhost'
+    const addr = isLocal ? '0xb6D4B580AE43C245c2E9BE0fB464a89E770392CF' : ''
+    const [v, setV] = useState<Partial<Param>>({rpc, addr, chain: isLocal ? 'evm test' : ''})
     const chains: string[] = [
         "core", "test", "evm", "evm test"
     ]
