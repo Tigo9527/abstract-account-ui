@@ -35,7 +35,7 @@ export const MigratorIndex = () => {
         ],
         "test": [{name: "test", addr: "cfxtest:acafj6suf4z17rhdz0zzb66729rnzun8tage6er7ta"}],
         "evm": [{name: "hero", addr: "0x634e34e0f9c09dba2e61a398f7b76e6327b97916"}],
-        "evm test": [{name: "Demo721", addr}, {name: "Demo1155", addr: "0x6Df0206044863908b27bE387dCA0A187c50CD44B"}],
+        "evm test": [{name: "Demo721", addr}, {name: "Demo1155", addr: "0xBEe04d509A2599c9F816c0386Afd6771D6b18119"}],
     }
     const chainOps = chains.map(chain => {
         return {label: chain, value: chain}

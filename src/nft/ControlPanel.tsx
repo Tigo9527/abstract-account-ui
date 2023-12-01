@@ -1,7 +1,7 @@
 import {Button, Card, Space} from "antd";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {fetchJson} from "ethers/lib/utils";
-import {ReloadOutlined} from "@ant-design/icons";
+import {CopyOutlined, ReloadOutlined} from "@ant-design/icons";
 import Link from "antd/es/typography/Link";
 import {BigNumberish} from "ethers";
 import {convertStatus600, mergeV} from "../logic/utils.ts";
@@ -24,7 +24,9 @@ type MigData = {
 export const ControlPanel = ({addr, sampleId, erc}: Param) => {
     const metaHost = window.location.protocol.startsWith("https") ? "" : "https://www.clonex.fun"
     const [v, setV] = useState<Partial<MigData>>({loading: true})
-
+    const newUri = useMemo(()=>{
+        return erc === '721' ? `${metaHost}/nft-house/storage/meta/${v.root}/` : `${metaHost}/nft-house/storage/meta/${v.root}/{id}`
+    }, [erc, metaHost, v])
     const fetchInfo = useCallback(()=>{
         if (!addr) {
             return
@@ -94,8 +96,8 @@ export const ControlPanel = ({addr, sampleId, erc}: Param) => {
         <Card title={<>Migration Info <Button
             onClick={fetchInfo} type={'text'}
             size={'small'} onMouseDown={e=>e.preventDefault()}
-        ><ReloadOutlined/></Button></>} size={'small'}>
-        <Space style={{textAlign: 'left', width: '100%', }} direction={'vertical'}>
+        ><ReloadOutlined/></Button></>} size={'small'} style={{maxWidth:'800px'}}>
+        <Space style={{textAlign: 'left', width: '100%'}} direction={'vertical'}>
                 {v.id === undefined && (erc === '721' || erc === '1155') &&
                 <Space>
                         <>No migration record.</>
@@ -117,11 +119,21 @@ export const ControlPanel = ({addr, sampleId, erc}: Param) => {
             </div>
             <div style={{display: v.status ? "" : 'none'}}>
                 <div>Meta Root Hash: {v.root}</div>
-                {v.metaUploaded &&
-                    <div>Sample meta: <Link target={"_blank"} href={`${metaHost}/nft-house/storage/meta/${v.root}/${sampleId}`}>
-                        {v.root ? 'preview' : ''}
-                    </Link></div>
-                }
+                {v.metaUploaded && <>
+                    <div>Sample meta:
+                        <Link target={"_blank"} href={`${metaHost}/nft-house/storage/meta/${v.root}/${sampleId}`}>
+                            {v.root ? 'preview' : ''}
+                        </Link>
+                    </div>
+                    <Space>
+                        <div style={{color: 'orangered'}}>Now you can set {erc === '721' ? 'baseURI' : 'uri'} of your contract to:
+                        </div>
+                            <CopyOutlined  onClick={()=>navigator.clipboard.writeText(newUri)}/>
+                    </Space>
+                    <div style={{color: '', overflow: 'auto'}}><pre>{
+                        newUri
+                    }</pre></div>
+                </>}
             </div>
             {v.error && <div style={{maxWidth: '800px'}}>{v.error}</div>}
         </Space>
