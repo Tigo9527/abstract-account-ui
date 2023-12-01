@@ -89,7 +89,7 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
                 <div>ERC: {erc}</div>
             </div>
             {v.error && <div style={{color: 'red', width: '800px'}}>{v.error} {v.is721 ? "721":""}</div>}
-            {!v.error && <ControlPanel addr={contract?.address} sampleId={v.firstTokenId} erc={erc}/>}
+            {!v.error && contract && <ControlPanel addr={contract?.address} sampleId={v.firstTokenId} erc={erc}/>}
             {contract && Boolean(v.firstTokenId) &&
                 <MetaView contract={contract} tokenId={v.firstTokenId!} erc={erc}/>
             }

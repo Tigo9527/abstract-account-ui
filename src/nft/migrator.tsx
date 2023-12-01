@@ -64,7 +64,7 @@ export const MigratorIndex = () => {
                         {/*|*/}
                         {/*<div> RPC: {v.rpc}</div>*/}
                     </Space>
-                    <Search value={v.addr} onChange={(elem) => setV(v => mergeV(v, {addr: elem.target.value}))}/>
+                    <Search allowClear={true} placeholder={'NFT contract address'} value={v.addr} onChange={(elem) => setV(v => mergeV(v, {addr: elem.target.value}))}/>
                     { window.location.hostname === 'localhost' &&
                         <Space>Sample Contract:
                         {
