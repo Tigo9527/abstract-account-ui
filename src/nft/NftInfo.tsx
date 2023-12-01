@@ -80,6 +80,9 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
             })
         });
     }, [contract])
+    if (!rpcUrl || !addr) {
+        return null
+    }
     return (
         <Space direction={'vertical'}>
             <div style={{display: 'flex', justifyContent: 'space-evenly', width: '800px'}}>
@@ -94,5 +97,5 @@ export const NftInfo = ({addr, rpcUrl}:NftInfoParam) => {
                 <MetaView contract={contract} tokenId={v.firstTokenId!} erc={erc}/>
             }
         </Space>
-    )
+    );
 }
