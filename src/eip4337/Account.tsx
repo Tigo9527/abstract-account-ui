@@ -66,8 +66,9 @@ export function Account() {
             }
             {addr && aaAddrB.lt(parseEther("20")) &&
                 <Space direction={'vertical'} style={{width: '100%'}}>
-                    <div>Get some ETH to continue. <Link href={'https://efaucet.confluxnetwork.org/'}
+                    <div>Get at least 21 ETH to continue. <Link href={'https://efaucet.confluxnetwork.org/'}
                                                          target={'_blank'}>Faucet</Link></div>
+                    <div>Refresh this page when you are ready.</div>
                 </Space>
             }
         </Space>

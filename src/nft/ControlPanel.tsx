@@ -1,11 +1,12 @@
 import {Button, Card, Space} from "antd";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {fetchJson} from "ethers/lib/utils";
-import {CopyOutlined, ReloadOutlined} from "@ant-design/icons";
+import {ReloadOutlined} from "@ant-design/icons";
 import Link from "antd/es/typography/Link";
 import {BigNumberish} from "ethers";
 import {convertStatus600, mergeV} from "../logic/utils.ts";
 import {getChain} from "./nftLogic.ts";
+import {CopyIcon} from "../component/CopyIcon.tsx";
 
 type Param = {
     addr?: string, sampleId?: string|BigNumberish|null, erc: string,
@@ -130,7 +131,7 @@ export const ControlPanel = ({addr, sampleId, erc}: Param) => {
                     <Space>
                         <div style={{color: 'orangered'}}>Now you can set {erc === '721' ? 'baseURI' : 'uri'} of your contract to:
                         </div>
-                            <CopyOutlined  onClick={()=>navigator.clipboard.writeText(newUri)}/>
+                            <CopyIcon content={newUri}/>
                     </Space>
                     <div style={{color: '', overflow: 'auto'}}><pre>{
                         newUri
