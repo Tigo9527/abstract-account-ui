@@ -22,7 +22,8 @@ type MigData = {
     error: string, loading: boolean
 }
 export const ControlPanel = ({addr, sampleId, erc}: Param) => {
-    const metaHost = window.location.protocol.startsWith("https") ? "" : "https://www.clonex.fun"
+    const {protocol, hostname} = window.location
+    const metaHost = window.location.protocol.startsWith("https") ? `${protocol}://${hostname}` : "https://www.clonex.fun"
     const [v, setV] = useState<Partial<MigData>>({loading: true})
     const newUri = useMemo(()=>{
         return erc === '721' ? `${metaHost}/nft-house/storage/meta/${v.root}/` : `${metaHost}/nft-house/storage/meta/${v.root}/{id}`
