@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Button, Form, Input, Space, Spin, Upload} from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import {UploadOutlined} from "@ant-design/icons";
@@ -18,21 +18,34 @@ type FieldType = {
     tokenId?: string;
     meta?: string;
     image?: File;
+    imageUrl?: string;
 };
 type StoreResult = {
     image: string, meta: string, loading: boolean
 }
 export const BuildMeta: React.FC = () => {
     const [form] = Form.useForm<FieldType>();
-    const [v, setV] = useState<Partial<StoreResult>>({loading: true})
+    const [v, setV] = useState<Partial<StoreResult>>({loading: false})
     const file = Form.useWatch('image', form)
-
+    const imageUrl = Form.useWatch('imageUrl', form)
+    useEffect(()=>{
+        const metaStr = form.getFieldValue("meta")
+        try {
+            const json = JSON.parse(metaStr)
+            json['image'] = imageUrl;
+            form.setFieldValue("meta", JSON.stringify(json, null, 4))
+        } catch (e) {
+            alert(`invalid meta`)
+        }
+    }, [imageUrl, form])
+    const host = ''
+    // const host = 'https://www.clonex.fun'
     const onFinish = useCallback((values: any) => {
         console.log('submit:', values);
         const formData = new FormData()
         Object.keys(values).forEach(k=>formData.append(k, values[k]))
         setV({loading: true})
-        fetch(`/nft-house/store`, {
+        fetch(`${host}/nft-house/store`, {
             method: 'POST',
             body: formData
         }).then(res=>{
@@ -49,7 +62,7 @@ export const BuildMeta: React.FC = () => {
             form={form}
             name="basic"
             labelCol={{ span: 4 }}
-            wrapperCol={{ span: 16 }}
+            wrapperCol={{ span: 20 }}
             style={{ width: 800 }}
             initialValues={{ root: 'root', tokenId: '1', meta: JSON.stringify({
                     name: "my NFT",
@@ -91,8 +104,13 @@ export const BuildMeta: React.FC = () => {
                     {!file && <Button icon={<UploadOutlined/>}>Click to upload</Button>}
                 </Upload>
             </Form.Item>
+            <Form.Item<FieldType>
+                label={"OR, Image URL"} name="imageUrl"
+            >
+                <Input type={'text'} allowClear={true}/>
+            </Form.Item>
 
-            <Form.Item wrapperCol={{offset: 0}} label={""}>
+            <Form.Item wrapperCol={{offset: 4}} label={""}>
                 <Button type="primary" htmlType="submit">
                     Submit
                 </Button>
@@ -106,7 +124,7 @@ export const BuildMeta: React.FC = () => {
             }
             {v?.loading && <Spin/>}
             <div style={{color:'red'}}>
-                { (v && !v.meta && !v.image && !v.loading) ? `${JSON.stringify(v)}` : "" }
+                { (v && !v.meta && !v.image && (v.loading === undefined)) ? `${JSON.stringify(v)}` : "" }
             </div>
         </Space>
     );

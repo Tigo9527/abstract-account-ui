@@ -1,6 +1,7 @@
 import { BigNumberish, Contract, ethers } from 'ethers'
 
 const abi = [
+  'function safeMint(address _to)', // erc721
   'function mint(address _to, uint256 _amount)',
   'function approve(address spender, uint256 amount) external returns (bool)',
   'function transfer(address to, uint amount)',

@@ -15,4 +15,5 @@ export const EIP4337 = {
     provider: ethers.getDefaultProvider(nodeRpc),
     scanUrl: hasHost ? '' : 'https://evmtestnet.confluxscan.io',
     demoErc20: '0x7d682e65efc5c13bf4e394b8f376c48e6bae0355',
+    demoErc721: '0xb6D4B580AE43C245c2E9BE0fB464a89E770392CF',
 }

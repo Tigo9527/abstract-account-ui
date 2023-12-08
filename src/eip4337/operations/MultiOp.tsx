@@ -31,10 +31,16 @@ export function MultiOp({opReceiver, defaultAddr}: {
     useEffect(()=> {
         try {
             const data: OpsData = {
-                destArr: ids.map(() => EIP4337.demoErc20),
+                destArr: ids.map((id) => {
+                    const input = map.get(id.toString())!
+                    return input.action === 'safeMint' ? EIP4337.demoErc721 : EIP4337.demoErc20
+                }),
                 fnArr: ids.map((id) => {
                     const input = map.get(id.toString())!
-                    return abiInterface.encodeFunctionData(input.action.toLowerCase(), [input.address, parseEther(input.amount.toString())])
+                    return input.action === 'safeMint' ?
+                        abiInterface.encodeFunctionData(input.action, [input.address])
+                        :
+                        abiInterface.encodeFunctionData(input.action.toLowerCase(), [input.address, parseEther(input.amount.toString())])
                 })
             }
             // console.log(`report data`, data)
@@ -43,7 +49,7 @@ export function MultiOp({opReceiver, defaultAddr}: {
             opReceiver({})
             // alert(`Failed to encode function ${e}`)
         }
-    }, [ids, map]);
+    }, [ids, map, opReceiver]);
 
     const fn = useCallback((_:OpInput, allValues:OpInput)=>{
         // console.log(`allValues`, allValues)
@@ -53,7 +59,8 @@ export function MultiOp({opReceiver, defaultAddr}: {
     }, [map])
     return (
         <Space direction={'vertical'}>
-            <div>Target ERC20 contract: <Addr addr={EIP4337.demoErc20}/></div>
+            <div>(Mint,Approve,Transfer) will call to ERC20: <Addr addr={EIP4337.demoErc20} short={true}/></div>
+            <div>(safeMint) will call to ERC721: <Addr addr={EIP4337.demoErc721} short={true}/></div>
             {ids.map((i, )=>{
                 return <OP key={i} btn={
                     <Button type={'text'} disabled={ids.length===1} onClick={()=>remove(i)}><MinusOutlined/></Button>

@@ -5,6 +5,7 @@ import {NftInfo} from "./NftInfo.tsx";
 import {EIP4337} from "../eip4337/conf.ts";
 import {mergeV} from "../logic/utils.ts";
 import {setChain} from "./nftLogic.ts";
+import {BuildMeta} from "./BuildMeta.tsx";
 
 type Param = {
     rpc: string, addr: string, chain: string
@@ -13,10 +14,10 @@ type Param = {
 export const Migrator = () => {
     return <Card>
         <h4 style={{textAlign: 'center',}}>Migrate NFT meta and resource to storage</h4>
-        <MigratorIndex/>
+        {/*<MigratorIndex/>*/}
         <Tabs items={[
-            // {key: "1", label: "Migrate", children: <MigratorIndex/>},
-            // {key: "2", label: "Build Meta", children: <BuildMeta/>},
+            {key: "1", label: "Migrate", children: <MigratorIndex/>},
+            {key: "2", label: "Build Meta", children: <BuildMeta/>},
         ]}></Tabs>
     </Card>
 }

@@ -1,7 +1,7 @@
 import {Form, Input, Select, Space} from "antd";
 import {FC, ReactNode, useEffect} from "react";
 
-const opTypes = ['Mint', 'Approve', 'Transfer']
+const opTypes = ['Mint', 'Approve', 'Transfer', 'safeMint']
 
 export const OP: FC<{
     btn?: ReactNode, id?:string, defaultAddr?: string,
@@ -12,6 +12,7 @@ export const OP: FC<{
       }) => {
 
     const [form] = Form.useForm();
+    const action = Form.useWatch("action", form)
     useEffect(()=>{
         const initV = {
             action: opTypes[0],
@@ -20,7 +21,7 @@ export const OP: FC<{
         };
         form.setFieldsValue(initV)
         onValuesChange && onValuesChange(initV, initV)
-    }, [])
+    }, [defaultAddr, id])
     return (
         <>
             <Space>
@@ -39,9 +40,9 @@ export const OP: FC<{
                     <Form.Item label="Address" name={'address'}>
                         <Input placeholder=""/>
                     </Form.Item>
-                    <Form.Item label="Amount" name={'amount'} tooltip={'Unit is ETH (10^18)'}>
+                    {action !== 'safeMint' && <Form.Item label="Amount" name={'amount'} tooltip={'Unit is ETH (10^18)'}>
                         <Input placeholder="" style={{width: 60}}/>
-                    </Form.Item>
+                    </Form.Item>}
                 </Form>
                 {btn}
             </Space>
