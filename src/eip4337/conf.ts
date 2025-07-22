@@ -13,6 +13,6 @@ export const EIP4337 = {
     accountFactory: '0xd88D097bb059bB1DF45CFF8eBa1bF16A8F12070d',
     rsaFactory: '0x089C3F0E4FdC735a7Ae2bEf41246812aE43fde72',
     provider: ethers.getDefaultProvider(nodeRpc),
-    scanUrl: hasHost ? '' : 'https://evmtestnet.confluxscan.io',
+    scanUrl: hasHost ? '' : 'https://evmtestnet.confluxscan.org',
     demoErc20: '0x7d682e65efc5c13bf4e394b8f376c48e6bae0355',
 }
