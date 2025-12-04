@@ -15,11 +15,10 @@ export const TxInput = () => {
     const [rpcSwitch, setRpcSwitch] = useState(initRpcSwith as 'test' | 'evm' | 'other');
 
     const provider = useMemo(() => {
-        const apiKey = '3M5xMwYFc5otj9brLq3JRnFaeoC2XPAv8svHu8Co3b2jSd37bLA8UCQzsE64SN7Y9JRS4HNgM2My4aqVR41iwKDK8'
         const rpc = rpcHost[rpcSwitch].rpc
         rpcHolder.rpc = rpc
         rpcHolder.api = rpcHost[rpcSwitch].api
-        return new ethers.providers.JsonRpcProvider(rpc.startsWith('https') ? rpc + '/' + apiKey : rpc)
+        return new ethers.providers.JsonRpcProvider(rpc)
     }, [rpcSwitch, rpcHost])
 
     const loadTrace = useCallback(() => {
